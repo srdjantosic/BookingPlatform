@@ -9,14 +9,15 @@ export default function UserRegistraton() {
     const[email, setEmail] = useState('')
     const[username, setUsername] = useState('')
     const[address, setAddress] = useState('')
+    const[role, setRole] = useState('')
 
     const handleClick = (e) =>{
       e.preventDefault()
-      const new_user = {password, firstName, lastName, email, username}
+      const new_user = {password, firstName, lastName, email, username,address,role}
 
-      fetch("http://localhost:8081/api/users/createRegularUser",{ 
+      fetch("http://localhost:8080/api/user/insert",{ 
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+     // headers:{"Content-Type":"application/json"},
       body:JSON.stringify(new_user)
     }).then(() =>{
       alert("Successful registration!")
@@ -67,7 +68,13 @@ export default function UserRegistraton() {
                     <input type='address' id="address" name="address" onChange={(e)=>setAddress(e.target.value)}/>
                 </label>
             </fieldset>
-            <button type="submit">Sign Up</button>
+            <fieldset>
+                <label>
+                    <p>Role</p>
+                    <input type='role' id="role" name="role" onChange={(e)=>setRole(e.target.value)}/>
+                </label>
+            </fieldset>
+            <button type="submit"onSubmit={handleClick}>Sign Up</button>
         </form>
       </div>
       <div className="bodyImg"></div>

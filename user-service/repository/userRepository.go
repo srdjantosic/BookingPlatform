@@ -20,7 +20,8 @@ type UserRepository struct {
 }
 
 func New(ctx context.Context, logger *log.Logger) (*UserRepository, error) {
-	dburi := os.Getenv("MONGODB_URI")
+	//dburi := os.Getenv("MONGODB_URI")
+	dburi := os.Getenv("mongodb+srv://draga:draga@cluster0.dlhjqkp.mongodb.net/?retryWrites=true&w=majority")
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(dburi))
 	if err != nil {

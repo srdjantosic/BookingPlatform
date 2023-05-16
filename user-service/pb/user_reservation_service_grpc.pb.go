@@ -4,7 +4,7 @@
 // - protoc             v3.20.3
 // source: user_reservation_service.proto
 
-package user_reservation
+package pb
 
 import (
 	context "context"

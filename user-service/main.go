@@ -2,21 +2,37 @@ package main
 
 import (
 	"BookingPlatform/user-service/handler"
+	"BookingPlatform/user-service/pb"
 	"BookingPlatform/user-service/repository"
 	"BookingPlatform/user-service/service"
 	"context"
 	"fmt"
 	"github.com/gorilla/mux"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	gorillaHandlers "github.com/gorilla/handlers"
 )
 
 func main() {
+	//var opts []grpc.DialOption
+	conn, err := grpc.Dial("localhost:8001", grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+	}
+	defer conn.Close()
+
+	client := pb.NewUserReservationServiceClient(conn)
+
+	//rez, err := client.SayHi(context.Background(), &pb.HiRequest{Message: "VELJA"})
+
+	rez, err := client.GetIfNoReservations(context.Background(), &pb.GetReservationsForUserRequest{GuestId: "646260fa248d4f0da8c81e6a"})
+	fmt.Println("USOOO2 " + strconv.FormatBool(rez.Message))
 
 	fmt.Println("USER")
 

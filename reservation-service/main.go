@@ -2,12 +2,16 @@ package main
 
 import (
 	"BookingPlatform/reservation-service/handler"
+	"BookingPlatform/reservation-service/pb"
 	"BookingPlatform/reservation-service/repository"
 	"BookingPlatform/reservation-service/service"
 	"context"
+	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
+	"google.golang.org/grpc"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,7 +20,33 @@ import (
 	gorillaHandlers "github.com/gorilla/handlers"
 )
 
+type UserReservationService struct {
+	pb.UnimplementedUserReservationServiceServer
+}
+
+func (s *UserReservationService) SayHi(ctx context.Context, req *pb.HiRequest) (*pb.HiResponse, error) {
+	// Logic to fetch user from database or any other service
+	//message := "USO1" // Example response
+	message := req.Message // Example response
+
+	return &pb.HiResponse{
+		Message: message,
+	}, nil
+}
+
+//func (UnimplementedUserReservationServiceServer) SatHi(context.Context, *HiRequest) (*HiResponse, error) {
+//	return nil, status.Errorf(codes.Unimplement
+
 func main() {
+	flag.Parse()
+	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", 8001))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	var opts []grpc.ServerOption
+	grpcServer := grpc.NewServer(opts...)
+	pb.RegisterUserReservationServiceServer(grpcServer, &UserReservationService{})
+	grpcServer.Serve(lis)
 
 	fmt.Println("RESERVATION")
 

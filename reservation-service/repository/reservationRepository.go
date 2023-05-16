@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"BookingPlatform/reservation-service/model"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,7 +19,8 @@ type ReservationRepository struct {
 }
 
 func New(ctx context.Context, logger *log.Logger) (*ReservationRepository, error) {
-	dburi := os.Getenv("MONGODB_URI")
+	//dburi := os.Getenv("MONGODB_URI")
+	dburi := os.Getenv("mongodb+srv://draga:draga@cluster0.dlhjqkp.mongodb.net/?retryWrites=true&w=majority")
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(dburi))
 	if err != nil {
@@ -58,4 +60,29 @@ func (r *ReservationRepository) Ping() {
 		r.Logger.Println(err)
 	}
 	fmt.Println(dbs)
+}
+
+func (fr *ReservationRepository) getCollection() *mongo.Collection {
+	bookingDatabase := fr.Cli.Database("booking")
+	reservationsCollection := bookingDatabase.Collection("reservations")
+	return reservationsCollection
+}
+
+func (rr *ReservationRepository) GetAll(guestId string) (model.Reservations, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	reservationsCollection := rr.getCollection()
+
+	var reservations model.Reservations
+	flightsCursor, err := reservationsCollection.Find(ctx, bson.M{"guestId": guestId})
+	if err != nil {
+		rr.Logger.Println(err)
+		return nil, err
+	}
+	if err = flightsCursor.All(ctx, &reservations); err != nil {
+		rr.Logger.Println(err)
+		return nil, err
+	}
+	return reservations, nil
 }

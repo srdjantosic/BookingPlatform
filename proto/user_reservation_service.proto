@@ -7,6 +7,7 @@ option go_package = "proto/user_reservation";
 service UserReservationService{
   rpc SayHi(HiRequest) returns (HiResponse);
   rpc GetReservationByGuestId(GetReservationRequest) returns(GetReservationResponse){}
+  rpc GetIfNoReservations(GetReservationsForUserRequest) returns (GetReservationsForUserResponse);
 }
 
 message Reservation{
@@ -36,4 +37,12 @@ message HiRequest{
 
 message HiResponse{
   string message=1;
+}
+
+message GetReservationsForUserRequest{
+  string guestId = 1;
+}
+
+message GetReservationsForUserResponse{
+  bool message = 1;
 }

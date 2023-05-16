@@ -4,7 +4,7 @@
 // - protoc             v3.20.3
 // source: user_reservation_service.proto
 
-package user_reservation
+package pb
 
 import (
 	context "context"
@@ -21,7 +21,6 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	UserReservationService_SayHi_FullMethodName                   = "/user_reservation.UserReservationService/SayHi"
 	UserReservationService_GetReservationByGuestId_FullMethodName = "/user_reservation.UserReservationService/GetReservationByGuestId"
-	UserReservationService_GetIfNoReservations_FullMethodName     = "/user_reservation.UserReservationService/GetIfNoReservations"
 )
 
 // UserReservationServiceClient is the client API for UserReservationService service.
@@ -30,7 +29,6 @@ const (
 type UserReservationServiceClient interface {
 	SayHi(ctx context.Context, in *HiRequest, opts ...grpc.CallOption) (*HiResponse, error)
 	GetReservationByGuestId(ctx context.Context, in *GetReservationRequest, opts ...grpc.CallOption) (*GetReservationResponse, error)
-	GetIfNoReservations(ctx context.Context, in *GetReservationsForUserRequest, opts ...grpc.CallOption) (*GetReservationsForUserResponse, error)
 }
 
 type userReservationServiceClient struct {
@@ -59,22 +57,12 @@ func (c *userReservationServiceClient) GetReservationByGuestId(ctx context.Conte
 	return out, nil
 }
 
-func (c *userReservationServiceClient) GetIfNoReservations(ctx context.Context, in *GetReservationsForUserRequest, opts ...grpc.CallOption) (*GetReservationsForUserResponse, error) {
-	out := new(GetReservationsForUserResponse)
-	err := c.cc.Invoke(ctx, UserReservationService_GetIfNoReservations_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UserReservationServiceServer is the server API for UserReservationService service.
 // All implementations must embed UnimplementedUserReservationServiceServer
 // for forward compatibility
 type UserReservationServiceServer interface {
 	SayHi(context.Context, *HiRequest) (*HiResponse, error)
 	GetReservationByGuestId(context.Context, *GetReservationRequest) (*GetReservationResponse, error)
-	GetIfNoReservations(context.Context, *GetReservationsForUserRequest) (*GetReservationsForUserResponse, error)
 	mustEmbedUnimplementedUserReservationServiceServer()
 }
 
@@ -87,9 +75,6 @@ func (UnimplementedUserReservationServiceServer) SayHi(context.Context, *HiReque
 }
 func (UnimplementedUserReservationServiceServer) GetReservationByGuestId(context.Context, *GetReservationRequest) (*GetReservationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReservationByGuestId not implemented")
-}
-func (UnimplementedUserReservationServiceServer) GetIfNoReservations(context.Context, *GetReservationsForUserRequest) (*GetReservationsForUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetIfNoReservations not implemented")
 }
 func (UnimplementedUserReservationServiceServer) mustEmbedUnimplementedUserReservationServiceServer() {
 }
@@ -141,24 +126,6 @@ func _UserReservationService_GetReservationByGuestId_Handler(srv interface{}, ct
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserReservationService_GetIfNoReservations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetReservationsForUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserReservationServiceServer).GetIfNoReservations(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserReservationService_GetIfNoReservations_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserReservationServiceServer).GetIfNoReservations(ctx, req.(*GetReservationsForUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // UserReservationService_ServiceDesc is the grpc.ServiceDesc for UserReservationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -173,10 +140,6 @@ var UserReservationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetReservationByGuestId",
 			Handler:    _UserReservationService_GetReservationByGuestId_Handler,
-		},
-		{
-			MethodName: "GetIfNoReservations",
-			Handler:    _UserReservationService_GetIfNoReservations_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

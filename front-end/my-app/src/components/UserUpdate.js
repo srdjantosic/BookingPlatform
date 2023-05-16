@@ -2,19 +2,20 @@ import {useState} from 'react';
 import './styles/Login.css';
 export default function UserUpdate() {
   
-    const[password, setPassword] = useState('')
-    const[firstName, setFirstName] = useState('')
-    const[lastName, setLastName] = useState('')
-    const[email, setEmail] = useState('')
-    const[username, setUsername] = useState('')
-    const[address, setAddress] = useState('')
+    const[password, setPassword] = useState('');
+    const[firstName, setFirstName] = useState('');
+    const[lastName, setLastName] = useState('');
+    const[email, setEmail] = useState('');
+    const[username, setUsername] = useState('');
+    const[address, setAddress] = useState('');
+   
    
   
 
 
     const handleClick = (e) =>{
         e.preventDefault()
-        const new_user = {password, firstName, lastName, email, username,address}
+        const new_user = {password, firstName, lastName, email, username, address}
   
         fetch("http://localhost:8080/api/user/update/"+ localStorage.getItem('userId'),{ 
         method:"PATCH",
@@ -50,7 +51,7 @@ export default function UserUpdate() {
             <fieldset>
                 <label>
                     <p>UserName</p>
-                    <input id="userName" name="userName" onChange={(e)=>setUsername(e.target.value)}/>
+                    <input id="username" name="username" onChange={(e)=>setUsername(e.target.value)}/>
                 </label>
             </fieldset>
             <fieldset>

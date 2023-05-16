@@ -14,8 +14,12 @@ export default function CreateApartment() {
     const handleClick = (e) =>{
         var userId=localStorage.getItem('userId');
         var role= localStorage.getItem('role');
+        var regexPattern = new RegExp("true");
+        var boolValue1 = regexPattern.test(automaticReservation);
         e.preventDefault()
-        const new_apartment = {name, location, benefits, minGuestsNumber, maxGuestsNumber,automaticReservation}
+        var number = parseInt(minGuestsNumber, 10 );
+        var number1 = parseInt(maxGuestsNumber, 10 );
+        const new_apartment = {name, location, benefits, number, number1,boolValue1};
   
         fetch("http://localhost:8080/api/apartment/insert/"+role+"/"+userId,{ 
         method:"POST",

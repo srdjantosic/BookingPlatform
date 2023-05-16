@@ -1,6 +1,5 @@
 import {useState} from 'react';
 import './styles/Login.css';
-import { useNavigate } from 'react-router-dom'
 export default function UserUpdate() {
   
     const[password, setPassword] = useState('')
@@ -10,7 +9,7 @@ export default function UserUpdate() {
     const[username, setUsername] = useState('')
     const[address, setAddress] = useState('')
    
-    const navigate = useNavigate();
+  
 
 
     const handleClick = (e) =>{

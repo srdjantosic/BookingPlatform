@@ -64,3 +64,8 @@ func (us *UserService) Update(id string, userToUpdate *model.User) error {
 	}
 	return fmt.Errorf("You are not authorized for this function!")
 }
+
+func (us *UserService) Delete(id string) error {
+
+	return nil
+}

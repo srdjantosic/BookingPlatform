@@ -2,14 +2,16 @@ package model
 
 import (
 	"encoding/json"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io"
 )
 
 type Apartment struct {
-	ID       string `bson:"id" json:"id"`
-	Name     string `bson:"name" json:"name"`
-	Location string `bson:"location" json:"location"`
-	Benefits string `bson:"benefits" json:"benefits"`
+	ID       primitive.ObjectID `bson:"id" json:"id"`
+	HostId   primitive.ObjectID `bson:"hostId" json:"hostId"`
+	Name     string             `bson:"name" json:"name"`
+	Location string             `bson:"location" json:"location"`
+	Benefits string             `bson:"benefits" json:"benefits"`
 	//FOTOGRAFIJE???
 	minGuestsNumber int `bson:"minGuestsNumber" json:"minGuestsNumber"`
 	maxGuestsNumber int `bson:"maxGuestsNumber" json:"maxGuestsNumber"`

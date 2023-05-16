@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package user_reservation;
+
+option go_package = "proto/user_reservation";
+
+service UserReservationService{
+  rpc SayHi(HiRequest) returns (HiResponse);
+  rpc GetReservationByGuestId(GetReservationRequest) returns(GetReservationResponse){}
+}
+
+message Reservation{
+  string id=1;
+  string GuestId=2;
+  string ApartmentId=3;
+  string startDate=4;
+  string endDate=5;
+  int32 guestsNumber=6;
+}
+
+message ListOfReservation{
+  repeated Reservation reservations=1;
+}
+
+message GetReservationRequest{
+  string GuestId=1;
+}
+
+message GetReservationResponse{
+  ListOfReservation reservations=1;
+}
+
+message HiRequest{
+  string message=1;
+}
+
+message HiResponse{
+  string message=1;
+}

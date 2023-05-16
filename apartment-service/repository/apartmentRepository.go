@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"BookingPlatform/apartment-service/model"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
@@ -58,4 +59,43 @@ func (a *ApartmentRepository) Ping() {
 		a.Logger.Println(err)
 	}
 	fmt.Println(dbs)
+}
+func (a *ApartmentRepository) GetCollection() *mongo.Collection {
+	bookingDatabase := a.Cli.Database("booking")
+	apartmentsCollection := bookingDatabase.Collection("apartments")
+	return apartmentsCollection
+}
+
+func (a *ApartmentRepository) Insert(apartment *model.Apartment) (*model.Apartment, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	apartmentsCollection := a.GetCollection()
+
+	result, err := apartmentsCollection.InsertOne(ctx, &apartment)
+	if err != nil {
+		a.Logger.Println(err)
+		return nil, err
+	}
+	a.Logger.Printf("Documents ID: %v\n", result.InsertedID)
+	return apartment, nil
+}
+
+func (a *ApartmentRepository) GetAll() (model.Apartments, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	apartmentsCollection := a.GetCollection()
+
+	var apartments model.Apartments
+	apartmentsCursor, err := apartmentsCollection.Find(ctx, bson.M{})
+	if err != nil {
+		a.Logger.Println(err)
+		return nil, err
+	}
+	if err = apartmentsCursor.All(ctx, &apartments); err != nil {
+		a.Logger.Println(err)
+		return nil, err
+	}
+	return apartments, nil
 }

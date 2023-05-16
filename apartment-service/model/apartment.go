@@ -7,14 +7,15 @@ import (
 )
 
 type Apartment struct {
-	ID       primitive.ObjectID `bson:"id" json:"id"`
+	ID       primitive.ObjectID `bson:"_id" json:"id"`
 	HostId   primitive.ObjectID `bson:"hostId" json:"hostId"`
 	Name     string             `bson:"name" json:"name"`
 	Location string             `bson:"location" json:"location"`
 	Benefits string             `bson:"benefits" json:"benefits"`
 	//FOTOGRAFIJE???
-	minGuestsNumber int `bson:"minGuestsNumber" json:"minGuestsNumber"`
-	maxGuestsNumber int `bson:"maxGuestsNumber" json:"maxGuestsNumber"`
+	MinGuestsNumber      int  `bson:"minGuestsNumber" json:"minGuestsNumber"`
+	MaxGuestsNumber      int  `bson:"maxGuestsNumber" json:"maxGuestsNumber"`
+	AutomaticReservation bool `bson:"automaticReservation" json:"automaticReservation"`
 }
 
 type Apartments []*Apartment

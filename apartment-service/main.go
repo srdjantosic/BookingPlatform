@@ -47,6 +47,13 @@ func main() {
 	router := mux.NewRouter()
 	router.Use(apartmentHandler.MiddlewareContentTypeSet)
 
+	getRouter := router.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/", apartmentHandler.GetAll)
+
+	postRouter := router.Methods(http.MethodPost).Subrouter()
+	postRouter.HandleFunc("/insert/{userRole}/{userId}", apartmentHandler.Insert)
+	postRouter.Use(apartmentHandler.MiddlewareApartmentDeserialization)
+
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
 	server := http.Server{

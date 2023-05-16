@@ -4,15 +4,14 @@ import (
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io"
-	"time"
 )
 
 type Reservation struct {
 	ID           primitive.ObjectID `bson:"id" json:"id"`
 	GuestID      primitive.ObjectID `bson:"guestId" json:"guestId"`
 	ApartmentID  primitive.ObjectID `bson:"apartmentId" json:"apartmentId"`
-	StartDate    time.Time          `bson:"startDate" json:"startDate"`
-	EndDate      time.Time          `bson:"endDate" json:"endDate"`
+	StartDate    string             `bson:"startDate" json:"startDate"`
+	EndDate      string             `bson:"endDate" json:"endDate"`
 	GuestsNumber int                `bson:"guestsNumber" json:"guestsNumber"`
 }
 

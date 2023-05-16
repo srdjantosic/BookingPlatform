@@ -45,6 +45,24 @@ func (a *ApartmentHandler) MiddlewareApartmentDeserialization(next http.Handler)
 		next.ServeHTTP(rw, h)
 	})
 }
+
+func (a *ApartmentHandler) MiddlewarePricelistItemDeserialization(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		item := &model.PricelistItem{}
+		err := item.FromJSON(h.Body)
+		if err != nil {
+			http.Error(rw, "Unable to decode json", http.StatusBadRequest)
+			a.Logger.Fatal(err)
+			return
+		}
+
+		ctx := context.WithValue(h.Context(), KeyProduct{}, item)
+		h = h.WithContext(ctx)
+
+		next.ServeHTTP(rw, h)
+	})
+}
+
 func (a *ApartmentHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
 		a.Logger.Println("Method [", h.Method, "] - Hit path :", h.URL.Path)
@@ -85,4 +103,33 @@ func (a *ApartmentHandler) GetAll(rw http.ResponseWriter, h *http.Request) {
 		rw.WriteHeader(http.StatusBadRequest)
 	}
 	rw.WriteHeader(http.StatusOK)
+}
+
+func (a *ApartmentHandler) GetApartmentPricelist(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["apartmentId"]
+
+	pricelist := a.Service.GetApartmentPricelist(id)
+
+	err := pricelist.ToJSON(rw)
+	if err != nil {
+		a.Logger.Print("Unable to convert to json :", err)
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusOK)
+}
+
+func (a *ApartmentHandler) InsertPricelistItem(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["apartmentId"]
+	role := vars["userRole"]
+
+	item := h.Context().Value(KeyProduct{}).(*model.PricelistItem)
+
+	err := a.Service.InsertPricelistItem(item, id, role)
+	if err != nil {
+		a.Logger.Println(err)
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusCreated)
 }

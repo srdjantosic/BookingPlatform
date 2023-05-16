@@ -1,0 +1,111 @@
+.wrapper {
+    padding: 5px 20px;
+    display:flex;
+    justify-content: center; 
+    text-align: center;
+}
+
+.wrapper fieldset {
+    margin: 10px 0px;
+    border-width: 1px;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    width: 450px;
+}
+
+.wrapper input{
+    padding:10px;
+    border: 0;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    width: 300px;
+    font-size: medium;
+    font-style: italic;
+}
+
+.wrapper button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.wrapper select{
+    width: 320px;
+    padding: 10px 5px;
+    border: 0;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.15);
+    border-radius: 10px;
+}
+.leftdiv{
+    float: left;
+    width: 65%;
+}
+
+.rigdiv{
+    float: right;
+    width: 35%;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+  
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+  
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+  
+.topnav a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+table {
+    border: 2px solid forestgreen;
+    width: 1400px;
+}
+    
+th, td{
+    border-bottom: 1px solid black;
+}
+    
+td {
+    text-align: center;
+}
+
+.orderTable {
+    border: 2px solid forestgreen;
+    width: 950px;
+}
+
+.planTable{
+    border: 2px solid forestgreen;
+    height: 100%;
+    width: 100%;
+}
+.bodyImg{
+  
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 500px;
+    position: top;
+}

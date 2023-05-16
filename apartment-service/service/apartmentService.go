@@ -33,3 +33,13 @@ func (as *ApartmentService) GetAll() (model.Apartments, error) {
 	}
 	return apartments, nil
 }
+func (as *ApartmentService) GetApartmentPricelist(id string) *model.Pricelist {
+	return as.Repo.GetApartmentPricelist(id)
+}
+
+func (as *ApartmentService) InsertPricelistItem(item *model.PricelistItem, apartmentId string, userRole string) error {
+	if userRole == "HOST" {
+		return as.Repo.InsertPricelistItem(item, apartmentId)
+	}
+	return fmt.Errorf("You are not authorized for this function!")
+}

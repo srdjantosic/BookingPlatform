@@ -75,13 +75,18 @@ export default function CreateApartment() {
                     <input type='maxGuestsNumber' id="maxGuestsNumber" name="maxGuestsNumber" onChange={(e)=>setMaxGuestsNumber(e.target.value)}/>
                 </label>
             </fieldset>
-            <fieldset>
-                <label>
-                    <p>Automatic reservation</p>
-                    <input type='automaticReservation' id="automaticReservation" name="automaticReservation" onChange={(e)=>setAutomaticReservation(e.target.value)}/>
-                </label>
-            </fieldset>
             
+            
+            <fieldset>
+            <label>
+        Automatic Reservation
+      <select  onClick={(e)=>setAutomaticReservation(e.target.value)}>
+        <option value="false">False</option>
+        <option value="true">True </option>
+        
+      </select>
+       </label>     
+       </fieldset>
             <button type="submit" onClick={handleClick}>Create</button>
         
         </form>

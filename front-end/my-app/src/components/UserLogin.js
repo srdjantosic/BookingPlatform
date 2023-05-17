@@ -4,50 +4,39 @@ import './styles/Login.css';
 export default function UserLogin(){
     const[username, setUserName] = useState('');
     const[password, setPassword] = useState('');
-    const[token, setToken] = useState([])
-    const handleSubmit = (e) =>{
-        e.preventDefault()
-        let user = {username, password}
-        console.log(user)
-        fetch("http://localhost:8081/auth/login", {
-          headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          method:"POST",
-          body:JSON.stringify(user),
-        }).then(res => res.json()).then((result)=>
-        {
-          setToken(result);
-    
-          let testToken = {accessToken : "", expiresIn : 0}
-    
-          testToken.accessToken = result.accessToken;
-          testToken.expiresIn = result.expiresIn;
-    
-          localStorage.setItem('testToken', JSON.stringify(testToken));
-          localStorage.setItem('user_userName', username);
-    
-          console.log(JSON.parse(localStorage.getItem('testToken')));
-    
-    
-    
-          if (username == "ivana1234") {
-            window.location.href='/UserUpdate';
-          }
-          else if(username == "cone123"){
-              window.location.href='/UserUpdate';
-    
-          }
-          else if(username == "marko123") {
-              window.location.href='/UserUpdate';
-          }
-          window.location.href='/UserUpdate';
-    
-        }
-        )
-      };
 
+   
+
+
+    const handleSubmit = (e) =>{
+      e.preventDefault()
+    
+      fetch("http://localhost:8080/api/user/" + username+"/"+password,{
+        headers : { 
+          
+          'Accept': 'application/json'
+         
+         },
+      })
+      .then(res =>res.json())
+      .then((result)=>
+      {
+        localStorage.setItem('user_userName', username);
+        localStorage.setItem('userId',result.data.id)
+        localStorage.setItem('role',result.data.role)
+        console.log(localStorage.getItem('role'))
+        
+        console.log(localStorage.getItem('user_userName'));
+          if(localStorage.getItem('role')==="HOST"){
+            window.location.href='/CreateApartment';
+          } else{
+        console.log(localStorage.getItem('userId'));
+window.location.href='/Homepage';
+          }
+      }
+      )
+    };
+    
  return(
 
     <body>

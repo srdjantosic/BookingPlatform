@@ -13,9 +13,10 @@ type Apartment struct {
 	Location string             `bson:"location" json:"location"`
 	Benefits string             `bson:"benefits" json:"benefits"`
 	//FOTOGRAFIJE???
-	MinGuestsNumber      int  `bson:"minGuestsNumber" json:"minGuestsNumber"`
-	MaxGuestsNumber      int  `bson:"maxGuestsNumber" json:"maxGuestsNumber"`
-	AutomaticReservation bool `bson:"automaticReservation" json:"automaticReservation"`
+	MinGuestsNumber      int              `bson:"minGuestsNumber" json:"minGuestsNumber"`
+	MaxGuestsNumber      int              `bson:"maxGuestsNumber" json:"maxGuestsNumber"`
+	AutomaticReservation bool             `bson:"automaticReservation" json:"automaticReservation"`
+	Pricelist            []*PricelistItem `bson:"pricelist" json:"pricelist"`
 }
 
 type Apartments []*Apartment

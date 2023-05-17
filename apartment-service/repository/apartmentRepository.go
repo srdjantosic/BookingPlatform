@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -72,12 +73,17 @@ func (a *ApartmentRepository) Insert(apartment *model.Apartment) (*model.Apartme
 
 	apartmentsCollection := a.GetCollection()
 
+	var pricelistItems []*model.PricelistItem
+
 	result, err := apartmentsCollection.InsertOne(ctx, &apartment)
 	if err != nil {
 		a.Logger.Println(err)
 		return nil, err
 	}
 	a.Logger.Printf("Documents ID: %v\n", result.InsertedID)
+
+	apartment.Pricelist = pricelistItems
+
 	return apartment, nil
 }
 
@@ -98,4 +104,40 @@ func (a *ApartmentRepository) GetAll() (model.Apartments, error) {
 		return nil, err
 	}
 	return apartments, nil
+}
+
+func (a *ApartmentRepository) InsertPricelistItem(item *model.PricelistItem, apartmentId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	objId, _ := primitive.ObjectIDFromHex(apartmentId)
+	filter := bson.M{"_id": objId}
+
+	var newItem model.PricelistItem
+	newItem.AvailabilityStartDate = item.AvailabilityStartDate
+	newItem.AvailabilityEndDate = item.AvailabilityEndDate
+	newItem.Price = item.Price
+	newItem.UnitPrice = item.UnitPrice
+
+	apartmentsCollection := a.GetCollection()
+	var apartment model.Apartment
+	err := apartmentsCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&apartment)
+	if err != nil {
+		a.Logger.Println(err)
+		return err
+	}
+
+	update := bson.M{"$set": bson.M{
+		"pricelist": append(apartment.Pricelist, &newItem),
+	}}
+
+	result, err := apartmentsCollection.UpdateOne(ctx, filter, update)
+	a.Logger.Printf("Documents matched: %v\n", result.MatchedCount)
+	a.Logger.Printf("Documents updated: %v\n", result.ModifiedCount)
+
+	if err != nil {
+		a.Logger.Println(err)
+		return err
+	}
+	return nil
 }

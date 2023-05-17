@@ -54,7 +54,7 @@ func main() {
 	logInRouter := router.Methods(http.MethodGet).Subrouter()
 	logInRouter.HandleFunc("/{username}/{password}", userHandler.GetUserByUsernameAndPassword)
 
-	putRouter := router.Methods(http.MethodPatch).Subrouter()
+	putRouter := router.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/update/{id}", userHandler.Update)
 	putRouter.Use(userHandler.MiddlewareUserDeserialization)
 

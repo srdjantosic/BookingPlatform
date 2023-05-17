@@ -15,10 +15,11 @@ export default function UserUpdate() {
 
     const handleClick = (e) =>{
         e.preventDefault()
+        var userId=localStorage.getItem('userId');
         const new_user = {password, firstName, lastName, email, username, address}
   
-        fetch("http://localhost:8080/api/user/update/"+ localStorage.getItem('userId'),{ 
-        method:"PATCH",
+        fetch("http://localhost:8080/api/user/update/"+ userId,{ 
+        method:"PUT",
         //headers:{  'Content-Type': 'application/json'},
         body:JSON.stringify(new_user)
       }).then(() =>{
@@ -34,7 +35,7 @@ export default function UserUpdate() {
     return(
       <body>
         <div className="wrapper">
-        <form >
+        <form onSubmit={handleClick}>
           <h1>User update</h1>
           <fieldset>
                 <label>

@@ -8,6 +8,7 @@ import UserRegistration from './components/UserRegistration';
 import UserUpdate from './components/UserUpdate';
 import Homepage from './components/Homepage';
 import CreateApartment from './components/CreateApartment';
+import DefineAvailableTerm from './components/DefineAvailableTerm';
 
 
 ReactDOM.render(
@@ -18,7 +19,7 @@ ReactDOM.render(
         <Route path='/UserUpdate/:id' element = {<UserUpdate/>}/>
         <Route path='/Homepage' element = {<Homepage/>}/>
         <Route path='/CreateApartment' element = {<CreateApartment/>}/>
-     
+        <Route path='/DefineAvailableTerm' element = {<DefineAvailableTerm/>}/>
     </Routes>
   </Router>,
  document.getElementById('root')

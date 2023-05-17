@@ -72,13 +72,8 @@ func (a *ApartmentRepository) Insert(apartment *model.Apartment) (*model.Apartme
 	defer cancel()
 
 	apartmentsCollection := a.GetCollection()
-	pricelistsCollection := a.GetPricelistsCollection()
 
-	var pricelist model.Pricelist
-	pricelist.ID = primitive.NewObjectID()
-	pricelist.ApartmentId = apartment.ID
-	var pricelistItems []model.PricelistItem
-	pricelist.PricelistItems = pricelistItems
+	var pricelistItems []*model.PricelistItem
 
 	result, err := apartmentsCollection.InsertOne(ctx, &apartment)
 	if err != nil {
@@ -87,12 +82,7 @@ func (a *ApartmentRepository) Insert(apartment *model.Apartment) (*model.Apartme
 	}
 	a.Logger.Printf("Documents ID: %v\n", result.InsertedID)
 
-	result, err = pricelistsCollection.InsertOne(ctx, pricelist)
-	if err != nil {
-		a.Logger.Println(err)
-		return nil, err
-	}
-	a.Logger.Printf("Documents ID: %v\n", result.InsertedID)
+	apartment.Pricelist = pricelistItems
 
 	return apartment, nil
 }
@@ -116,38 +106,12 @@ func (a *ApartmentRepository) GetAll() (model.Apartments, error) {
 	return apartments, nil
 }
 
-func (a *ApartmentRepository) GetPricelistsCollection() *mongo.Collection {
-	bookingDatabase := a.Cli.Database("booking")
-	pricelistsCollection := bookingDatabase.Collection("pricelists")
-	return pricelistsCollection
-}
-
-func (a *ApartmentRepository) GetApartmentPricelist(id string) *model.Pricelist {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	pricelistsCollection := a.GetPricelistsCollection()
-
-	var pricelist model.Pricelist
-	objId, _ := primitive.ObjectIDFromHex(id)
-	err := pricelistsCollection.FindOne(ctx, bson.M{"apartmentId": objId}).Decode(&pricelist)
-
-	if err != nil {
-		a.Logger.Println(err)
-		return nil
-	}
-
-	return &pricelist
-}
-
 func (a *ApartmentRepository) InsertPricelistItem(item *model.PricelistItem, apartmentId string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	pricelistsCollection := a.GetPricelistsCollection()
-
 	objId, _ := primitive.ObjectIDFromHex(apartmentId)
-	filter := bson.M{"apartmentId": objId}
+	filter := bson.M{"_id": objId}
 
 	var newItem model.PricelistItem
 	newItem.AvailabilityStartDate = item.AvailabilityStartDate
@@ -155,11 +119,19 @@ func (a *ApartmentRepository) InsertPricelistItem(item *model.PricelistItem, apa
 	newItem.Price = item.Price
 	newItem.UnitPrice = item.UnitPrice
 
-	pricelistItems := append(a.GetApartmentPricelist(apartmentId).PricelistItems, newItem)
+	apartmentsCollection := a.GetCollection()
+	var apartment model.Apartment
+	err := apartmentsCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&apartment)
+	if err != nil {
+		a.Logger.Println(err)
+		return err
+	}
+
 	update := bson.M{"$set": bson.M{
-		"pricelistItems": pricelistItems,
+		"pricelist": append(apartment.Pricelist, &newItem),
 	}}
-	result, err := pricelistsCollection.UpdateOne(ctx, filter, update)
+
+	result, err := apartmentsCollection.UpdateOne(ctx, filter, update)
 	a.Logger.Printf("Documents matched: %v\n", result.MatchedCount)
 	a.Logger.Printf("Documents updated: %v\n", result.ModifiedCount)
 

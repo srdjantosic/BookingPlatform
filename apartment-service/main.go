@@ -54,12 +54,12 @@ func main() {
 	postRouter.HandleFunc("/insert/{userRole}/{userId}", apartmentHandler.Insert)
 	postRouter.Use(apartmentHandler.MiddlewareApartmentDeserialization)
 
-	getPricelistRouter := router.Methods(http.MethodGet).Subrouter()
-	getPricelistRouter.HandleFunc("/getPricelist/{apartmentId}", apartmentHandler.GetApartmentPricelist)
-
 	postPricelistItemRouter := router.Methods(http.MethodPost).Subrouter()
 	postPricelistItemRouter.HandleFunc("/insertItem/{apartmentId}/{userRole}", apartmentHandler.InsertPricelistItem)
 	postPricelistItemRouter.Use(apartmentHandler.MiddlewarePricelistItemDeserialization)
+
+	filterRouter := router.Methods(http.MethodGet).Subrouter()
+	filterRouter.HandleFunc("/filter/{location}/{num}/{start}/{end}", apartmentHandler.FilterApartments)
 
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 

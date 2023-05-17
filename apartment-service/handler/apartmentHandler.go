@@ -4,12 +4,14 @@ import (
 	"BookingPlatform/apartment-service/model"
 	"BookingPlatform/apartment-service/service"
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type KeyProduct struct{}
@@ -105,20 +107,6 @@ func (a *ApartmentHandler) GetAll(rw http.ResponseWriter, h *http.Request) {
 	rw.WriteHeader(http.StatusOK)
 }
 
-func (a *ApartmentHandler) GetApartmentPricelist(rw http.ResponseWriter, h *http.Request) {
-	vars := mux.Vars(h)
-	id := vars["apartmentId"]
-
-	pricelist := a.Service.GetApartmentPricelist(id)
-
-	err := pricelist.ToJSON(rw)
-	if err != nil {
-		a.Logger.Print("Unable to convert to json :", err)
-		rw.WriteHeader(http.StatusBadRequest)
-	}
-	rw.WriteHeader(http.StatusOK)
-}
-
 func (a *ApartmentHandler) InsertPricelistItem(rw http.ResponseWriter, h *http.Request) {
 	vars := mux.Vars(h)
 	id := vars["apartmentId"]
@@ -132,4 +120,27 @@ func (a *ApartmentHandler) InsertPricelistItem(rw http.ResponseWriter, h *http.R
 		rw.WriteHeader(http.StatusBadRequest)
 	}
 	rw.WriteHeader(http.StatusCreated)
+}
+
+func (a *ApartmentHandler) FilterApartments(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	location := vars["location"]
+	num := vars["num"]
+	start := vars["start"]
+	end := vars["end"]
+
+	numInt, _ := strconv.Atoi(num)
+
+	apartments, err := a.Service.FilterApartments(location, numInt, start, end)
+	if err != nil {
+		a.Logger.Println(err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(rw).Encode(map[string]interface{}{
+		"status":     "success",
+		"statusCode": 200,
+		"data":       apartments,
+	})
 }

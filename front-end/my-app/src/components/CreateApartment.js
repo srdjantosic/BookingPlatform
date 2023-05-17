@@ -33,7 +33,11 @@ export default function CreateApartment() {
         console.log(err)
       });
       }
-
+      const handleClick1 = (e) =>{
+        
+        window.location.href = '/DefineAvailableTerm';
+     
+      }
 
     return(
       <body>
@@ -77,8 +81,11 @@ export default function CreateApartment() {
                 </label>
             </fieldset>
             
-            <button type="submit" onClick={handleClick}>Sign Up</button>
+            <button type="submit" onClick={handleClick}>submit</button>
+        
         </form>
+        
+        <button type="submit" onClick={handleClick1}>Define</button>
       </div>
       <div className="bodyImg"></div>
       <div className="wrapper">@Chocolate Factory Novi Sad since 2000</div>

@@ -4,7 +4,7 @@ import './styles/Login.css';
 export default function UserLogin(){
     const[username, setUserName] = useState('');
     const[password, setPassword] = useState('');
-    const[token, setToken] = useState([])
+
    
 
 
@@ -27,7 +27,7 @@ export default function UserLogin(){
         console.log(localStorage.getItem('role'))
         
         console.log(localStorage.getItem('user_userName'));
-          if(localStorage.getItem('role')=="HOST"){
+          if(localStorage.getItem('role')==="HOST"){
             window.location.href='/CreateApartment';
           } else{
         console.log(localStorage.getItem('userId'));

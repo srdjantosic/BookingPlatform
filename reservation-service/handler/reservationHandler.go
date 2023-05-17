@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
 )
@@ -51,4 +52,19 @@ func (r *ReservationHandler) MiddlewareContentTypeSet(next http.Handler) http.Ha
 
 		next.ServeHTTP(rw, h)
 	})
+}
+
+func (rh *ReservationHandler) Insert(rw http.ResponseWriter, h *http.Request) {
+	reservation := h.Context().Value(KeyProduct{}).(*model.Reservation)
+	reservation.ID = primitive.NewObjectID()
+
+	createdReservation, err := rh.Service.Insert(reservation)
+	if createdReservation == nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusCreated)
 }

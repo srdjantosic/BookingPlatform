@@ -23,11 +23,11 @@ message ListOfReservation{
 }
 
 message GetReservationRequest{
-  string GuestId=1;
+  string guestId=1;
 }
 
 message GetReservationResponse{
-  ListOfReservation reservations=1;
+  string reservations=1;
 }
 
 message HiRequest{

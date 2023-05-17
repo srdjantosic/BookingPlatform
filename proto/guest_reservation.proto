@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package guest_reservation;
+
+option go_package = "proto/guest_reservation";
+
+service ReservationService{
+  rpc GetReservationByGuestId(GetReservationRequest) returns(GetReservationResponse);
+}
+
+message GetReservationRequest{
+  string guestId=1;
+}
+
+message GetReservationResponse{
+  string reservations=1;
+}

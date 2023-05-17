@@ -68,6 +68,12 @@ func (ur *UserRepository) GetCollection() *mongo.Collection {
 	return usersCollection
 }
 
+func (ur *UserRepository) GetCollectionReservations() *mongo.Collection {
+	bookingDatabase := ur.Cli.Database("booking")
+	reservationsCollection := bookingDatabase.Collection("reservations")
+	return reservationsCollection
+}
+
 func (ur *UserRepository) GetOne(id string) (*model.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -169,4 +175,56 @@ func (ur *UserRepository) Delete(id string) error {
 	}
 	ur.Logger.Printf("Documents deleted: %v\n", result.DeletedCount)
 	return nil
+}
+
+func (ur *UserRepository) DeleteReservation(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	reservationsCollection := ur.GetCollectionReservations()
+
+	var reservation model.Reservation
+	objID, _ := primitive.ObjectIDFromHex(id)
+	err := reservationsCollection.FindOne(ctx, bson.M{"_id": objID}).Decode(&reservation)
+	if err != nil {
+		ur.Logger.Println(err)
+		return err
+	}
+
+	today := time.Now()
+	res_time, _ := time.Parse("02-01-2006", reservation.StartDate)
+	tomorrow := today.Add(24 * time.Hour)
+	if tomorrow.After(res_time) {
+		return nil
+	}
+
+	filter := bson.D{{Key: "_id", Value: objID}}
+	result, err := reservationsCollection.DeleteOne(ctx, filter)
+
+	if err != nil {
+		ur.Logger.Println(err)
+		return err
+	}
+
+	ur.Logger.Printf("Documents deleted : %v\n", result.DeletedCount)
+	return nil
+}
+
+func (ur *UserRepository) GetAllReservationsByUser(guestId string) (model.Reservations, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	reservationsCollection := ur.GetCollectionReservations()
+
+	var reservations model.Reservations
+	flightsCursor, err := reservationsCollection.Find(ctx, bson.M{"guestId": guestId})
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+	if err = flightsCursor.All(ctx, &reservations); err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+	return reservations, nil
 }

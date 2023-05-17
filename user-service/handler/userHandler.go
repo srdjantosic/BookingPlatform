@@ -98,3 +98,30 @@ func (u *UserHandler) Update(rw http.ResponseWriter, h *http.Request) {
 	}
 	rw.WriteHeader(http.StatusOK)
 }
+
+func (uh *UserHandler) DeleteReservation(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+
+	uh.Service.DeleteReservation(id)
+	rw.WriteHeader(http.StatusNoContent)
+}
+
+func (uh *UserHandler) GetAllReservationsByUser(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+	reservations, err := uh.Service.GetAllReservationsByUser(id)
+	if err != nil {
+		uh.Logger.Print("Database exception: ", err)
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	if reservations == nil {
+		return
+	}
+	err = reservations.ToJson(rw)
+	if err != nil {
+		uh.Logger.Print("Unable to convert to json :", err)
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusOK)
+}

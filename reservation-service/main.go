@@ -77,6 +77,10 @@ func main() {
 	router := mux.NewRouter()
 	router.Use(reservationHandler.MiddlewareContentTypeSet)
 
+	postRouter := router.Methods(http.MethodPost).Subrouter()
+	postRouter.HandleFunc("/insert", reservationHandler.Insert)
+	postRouter.Use(reservationHandler.MiddlewareUserDeserialization)
+
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
 	server := http.Server{

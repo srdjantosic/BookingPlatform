@@ -1,6 +1,7 @@
 package service
 
 import (
+	"BookingPlatform/reservation-service/model"
 	"BookingPlatform/reservation-service/pb"
 	"BookingPlatform/reservation-service/repository"
 	"context"
@@ -37,4 +38,8 @@ func (rs *ReservationService) GetIfNoReservations(ctx context.Context, req *pb.G
 		}, nil
 	}
 
+}
+
+func (rs *ReservationService) Insert(reservation *model.Reservation) (*model.Reservation, error) {
+	return rs.Repo.Insert(reservation)
 }

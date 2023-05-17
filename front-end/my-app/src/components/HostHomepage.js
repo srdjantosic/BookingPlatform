@@ -49,6 +49,11 @@ const search = (e) =>{
       })
    
 }
+const move = (e) =>{
+    window.location.href = "/DefineAvailableTerm"
+
+}
+
 
 
 
@@ -59,9 +64,9 @@ const search = (e) =>{
         <body>
             <div class="topnav">
                 <a class="active" href="/HostHomepage">Home Page</a>
-                <a  href="/">All apartments</a>
-                <a >Contracts</a>
-                <a href="/UserUpdate">Profile</a>
+                <a  href="/CreateApartment">Add new apartment</a>
+                <a href="/HostReservations">Reservations</a>
+                <a href="/HostUpdate">Profile</a>
              
             </div>
            
@@ -83,6 +88,7 @@ const search = (e) =>{
                     <input id="availabilityEndDate" name="availabilityEndDate" onChange={(e)=>setAvailabilityEndDate(e.target.value)}/>
                 </label>
                 <button onClick={search}> Search</button>
+                <button onClick={move}> Define new terms</button>
             </div>
             <div className='wrapper'>
                 <table>
@@ -92,6 +98,8 @@ const search = (e) =>{
                         <th>Benefits</th>
                         <th>Minimum number of guests</th>
                         <th>Maximum number of guests</th>
+                        <th>Final price</th>
+                        <th>Price per person</th>
                         
                     </tr>
                     {apartments.map((val, key) => {
@@ -102,7 +110,8 @@ const search = (e) =>{
                                 <td>{val.benefits}</td>
                                 <td>{val.minGuestsNumber}</td>
                                 <td>{val.maxGuestsNumber}</td>
-                            
+                                <td>{val.minGuestsNumber}</td>
+                                <td>{val.maxGuestsNumber}</td>
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
@@ -117,8 +126,7 @@ const search = (e) =>{
                                     <button onClick={(e) => {
                                         
 
-                                        localStorage.setItem('Id', val.id)
-
+                                        window.location.href = "/SeeApartment"
                                       //  navigate(`/UpdateOrder/`+val.id);
                                         
                                     }}>Delete</button>

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import './styles/Login.css';
-export default function UserUpdate() {
+export default function HostUpdate() {
   
     const[password, setPassword] = useState('');
     const[firstName, setFirstName] = useState('');
@@ -35,10 +35,10 @@ export default function UserUpdate() {
     return(
       <body>
         <div class="topnav">
-                <a href="/Homepage">Home Page</a>
-                <a  href="/UserReservations">Reservations</a>
-                <a >Contracts</a>
-                <a class="active" href="/UserUpdate">Profile</a>
+                <a href="/HostHomepage">Home Page</a>
+                <a  href="/CreateApartment">Add new apartment</a>
+                <a href="/HostReservations">Reservations</a>
+                <a class="active" href="/HostUpdate">Profile</a>
              
             </div>
         <div className="wrapper">

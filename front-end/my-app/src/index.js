@@ -10,6 +10,12 @@ import Homepage from './components/Homepage';
 import CreateApartment from './components/CreateApartment';
 import DefineAvailableTerm from './components/DefineAvailableTerm';
 import HostHomepage from './components/HostHomepage';
+import HostUpdate from './components/HostUpdate';
+import HostReservations from './components/HostReservations';
+import SeeApartment from './components/SeeApartment';
+import UserReservations from './components/UserReservations';
+import ReserveApartment from './components/ReserveApartment';
+
 
 
 ReactDOM.render(
@@ -22,6 +28,12 @@ ReactDOM.render(
         <Route path='/CreateApartment' element = {<CreateApartment/>}/>
         <Route path='/DefineAvailableTerm' element = {<DefineAvailableTerm/>}/>
         <Route path='/HostHomepage' element = {<HostHomepage/>}/>
+        <Route path='/HostUpdate' element = {<HostUpdate/>}/>
+        <Route path='/HostReservations' element = {<HostReservations/>}/>
+        <Route path='/SeeApartment' element = {<SeeApartment/>}/>
+        <Route path='/UserReservations' element={<UserReservations/>}/>
+        <Route path='/ReserveApartment' element={<ReserveApartment/>}/>
+
         
     </Routes>
   </Router>,

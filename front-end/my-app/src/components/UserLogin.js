@@ -21,12 +21,12 @@ export default function UserLogin(){
       .then(res =>res.json())
       .then((result)=>
       {
-        localStorage.setItem('user_userName', username);
+        
         localStorage.setItem('userId',result.data.id)
         localStorage.setItem('role',result.data.role)
         console.log(localStorage.getItem('role'))
         
-        console.log(localStorage.getItem('user_userName'));
+        
           if(localStorage.getItem('role')==="HOST"){
             window.location.href='/HostHomepage';
           } else{

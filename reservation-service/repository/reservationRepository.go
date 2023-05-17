@@ -96,6 +96,30 @@ func (rr *ReservationRepository) GetAll(guestId string) (model.Reservations, err
 	return reservations, nil
 }
 
+func (rr *ReservationRepository) AcceptRequest(reservationRequest *model.ReservationRequset) (*model.ReservationRequset, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	reservationsCollection := rr.GetCollectionRequests()
+	
+	//delete all reservations with same startDate and endDate
+	_, err2 := reservationsCollection.DeleteMany(ctx, bson.M{
+		"startDate": reservationRequest.StartDate,
+		"endDate":   reservationRequest.EndDate})
+	if err2 != nil {
+		rr.Logger.Println(err2)
+		return nil, err2
+	}
+
+	result, err := reservationsCollection.InsertOne(ctx, &reservationRequest)
+	if err != nil {
+		rr.Logger.Println(err)
+		return nil, err
+	}
+
+	rr.Logger.Printf("Documents ID: %v\n", result.InsertedID)
+	return reservationRequest, nil
+}
+
 func (rr *ReservationRepository) Insert(reservation *model.Reservation) (*model.Reservation, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -193,15 +217,7 @@ func (rr *ReservationRepository) DeleteRequest(id string) error {
 	defer cancel()
 
 	reservationsRequestsCollection := rr.GetCollectionRequests()
-	reservationsCollection := rr.GetCollection()
-
-	var reservation model.Reservation
 	objID, _ := primitive.ObjectIDFromHex(id)
-	err := reservationsCollection.FindOne(ctx, bson.M{"_id": objID}).Decode(&reservation)
-	if err != nil {
-		rr.Logger.Println(err)
-		return err
-	}
 
 	filter := bson.D{{Key: "_id", Value: objID}}
 	result, err := reservationsRequestsCollection.DeleteOne(ctx, filter)
@@ -211,14 +227,5 @@ func (rr *ReservationRepository) DeleteRequest(id string) error {
 	}
 	rr.Logger.Printf("Documents deleted: %v\n", result.DeletedCount)
 
-	//delete all reservations with same startDate and endDate
-	_, err2 := reservationsCollection.DeleteMany(ctx, bson.M{
-		"_id":       objID,
-		"startDate": reservation.StartDate,
-		"endDate":   reservation.EndDate})
-	if err2 != nil {
-		rr.Logger.Println(err2)
-		return err2
-	}
 	return nil
 }

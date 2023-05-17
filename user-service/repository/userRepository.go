@@ -4,14 +4,15 @@ import (
 	"BookingPlatform/user-service/model"
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"log"
-	"os"
-	"time"
 )
 
 type UserRepository struct {
@@ -216,16 +217,35 @@ func (ur *UserRepository) GetAllReservationsByUser(guestId string) (model.Reserv
 	fmt.Println("USOOOOOOOOOOOOOOOOOOOOOO33333333333333333333")
 	reservationsCollection := ur.GetCollectionReservations()
 
+	objID, _ := primitive.ObjectIDFromHex(guestId)
+	fmt.Println("**************************", objID, " *************************************")
+	filter := bson.D{{Key: "guestId", Value: objID}}
+
 	var reservations model.Reservations
-	//objID, _ := primitive.ObjectIDFromHex(guestId)
-	flightsCursor, err := reservationsCollection.Find(ctx, bson.M{})
+	//flightsCursor, err := reservationsCollection.Find(ctx, bson.M{"guestId": objID})
+	flightsCursor, err := reservationsCollection.Find(ctx, filter)
 	if err != nil {
 		ur.Logger.Println(err)
 		return nil, err
 	}
 	if err = flightsCursor.All(ctx, &reservations); err != nil {
 		ur.Logger.Println(err)
+		ur.Logger.Println("*************************************************")
 		return nil, err
 	}
 	return reservations, nil
+}
+
+func (ur *UserRepository) InsertReservation(reservation *model.Reservation) (*model.Reservation, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	reservationsCollection := ur.GetCollectionReservations()
+
+	result, err := reservationsCollection.InsertOne(ctx, &reservation)
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+	ur.Logger.Printf("Documents ID: %v\n", result.InsertedID)
+	return reservation, nil
 }

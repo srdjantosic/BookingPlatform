@@ -187,3 +187,38 @@ func (rr *ReservationRepository) Delete(id string) error {
 	rr.Logger.Printf("Documents deleted : %v\n", result.DeletedCount)
 	return nil
 }
+
+func (rr *ReservationRepository) DeleteRequest(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	reservationsRequestsCollection := rr.GetCollectionRequests()
+	reservationsCollection := rr.GetCollection()
+
+	var reservation model.Reservation
+	objID, _ := primitive.ObjectIDFromHex(id)
+	err := reservationsCollection.FindOne(ctx, bson.M{"_id": objID}).Decode(&reservation)
+	if err != nil {
+		rr.Logger.Println(err)
+		return err
+	}
+
+	filter := bson.D{{Key: "_id", Value: objID}}
+	result, err := reservationsRequestsCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		rr.Logger.Println(err)
+		return err
+	}
+	rr.Logger.Printf("Documents deleted: %v\n", result.DeletedCount)
+
+	//delete all reservations with same startDate and endDate
+	_, err2 := reservationsCollection.DeleteMany(ctx, bson.M{
+		"_id":       objID,
+		"startDate": reservation.StartDate,
+		"endDate":   reservation.EndDate})
+	if err2 != nil {
+		rr.Logger.Println(err2)
+		return err2
+	}
+	return nil
+}

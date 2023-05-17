@@ -91,6 +91,19 @@ func (rh *ReservationHandler) InsertReservationRequest(rw http.ResponseWriter, h
 	reservation_request := h.Context().Value(KeyProduct{}).(*model.ReservationRequset)
 	reservation_request.ID = primitive.NewObjectID()
 
+	/*ako je za apartman automatska potvrda
+	model.Reservation reservation := model.Reservation{
+		ID:           reservation_request.ID,
+		GuestID:      reservation_request.UserID,
+		ApartmentID:  reservation_request.ApartmentID,
+		StartDate:    reservation_request.StartDate,
+		EndDate:      reservation_request.EndDate,
+		GuestsNumber: reservation_request.GuestsNumber,
+	}
+
+	createdReservation, err := rh.Service.Insert(&reservation)
+	*/
+
 	createdReservationRequest, err := rh.Service.InsertReservationRequest(reservation_request)
 	if createdReservationRequest == nil {
 		rw.WriteHeader(http.StatusBadRequest)

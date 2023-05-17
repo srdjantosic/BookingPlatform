@@ -34,9 +34,9 @@ export default function UserUpdate() {
       <body>
         <div class="topnav">
                 <a href="/Homepage">Home Page</a>
-                <a class="active" href="/">Your orders</a>
+                <a  href="/UserReservations">Reservations</a>
                 <a >Contracts</a>
-                <a href="/UserUpdate">Profile</a>
+                <a class="active" href="/UserUpdate">Profile</a>
         </div>
         <div className="wrapper">
             <form>
@@ -79,6 +79,7 @@ export default function UserUpdate() {
                 </fieldset>
             
                 <button type="submit" onClick={handleClick}>Update</button>
+            <button type="submit">Delete account</button>
             </form>
         </div>
       </body>

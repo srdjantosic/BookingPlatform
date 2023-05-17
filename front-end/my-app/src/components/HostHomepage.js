@@ -42,14 +42,19 @@ function HostHomepage(){
             console.log(err);
         });
     }
+const move = (e) =>{
+    window.location.href = "/DefineAvailableTerm"
+
+}
+
 
     return(
         <body>
             <div class="topnav">
                 <a class="active" href="/HostHomepage">Home Page</a>
-                <a  href="/">All apartments</a>
-                <a >Contracts</a>
-                <a href="/UserUpdate">Profile</a>
+                <a  href="/CreateApartment">Add new apartment</a>
+                <a href="/HostReservations">Reservations</a>
+                <a href="/HostUpdate">Profile</a>
              
             </div>
             <div class="wrapper">
@@ -69,6 +74,7 @@ function HostHomepage(){
                         <td><button onClick={search}> Search</button></td>
                     </tr>
                 </table>
+                <button onClick={move}> Define new terms</button>
             </div>
             <div className='wrapper'>
                 <table id="toHide">
@@ -78,6 +84,8 @@ function HostHomepage(){
                         <th>Benefits</th>
                         <th>Minimum number of guests</th>
                         <th>Maximum number of guests</th>
+                        <th>Final price</th>
+                        <th>Price per person</th>
                         <th></th>
                     </tr>
                     {apartments.map((val, key) => {
@@ -86,6 +94,8 @@ function HostHomepage(){
                                 <td>{val.name}</td>
                                 <td>{val.location}</td>
                                 <td>{val.benefits}</td>
+                                <td>{val.minGuestsNumber}</td>
+                                <td>{val.maxGuestsNumber}</td>
                                 <td>{val.minGuestsNumber}</td>
                                 <td>{val.maxGuestsNumber}</td>
                                 <td>
@@ -123,8 +133,7 @@ function HostHomepage(){
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
-                                        localStorage.setItem('Id', val.id)
-                                    }}>View
+                                        window.location.href = "/SeeApartment"                                    }}>View
                                     </button>
                                 </td>
                             </tr>

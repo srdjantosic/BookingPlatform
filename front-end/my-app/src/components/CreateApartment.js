@@ -36,10 +36,10 @@ export default function CreateApartment() {
     return(
       <body>
         <div class="topnav">
-                <a href="/Homepage">Home Page</a>
-                <a class="active" href="/">Your orders</a>
-                <a >Contracts</a>
-                <a href="/UserUpdate">Profile</a>
+                <a href="/HostHomepage">Home Page</a>
+                <a class="active" href="/CreateApartment">Add new apartment</a>
+                <a href="/HostReservations">Reservations</a>
+                <a href="/HostUpdate">Profile</a>
              
         </div>
         <div className="wrapper">

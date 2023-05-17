@@ -2,7 +2,6 @@ package service
 
 import (
 	"BookingPlatform/reservation-service/model"
-	"BookingPlatform/reservation-service/pb"
 	"BookingPlatform/reservation-service/repository"
 	"log"
 )
@@ -12,9 +11,9 @@ type ReservationService struct {
 	Logger *log.Logger
 }
 
-type UserReservationService struct {
-	pb.UnimplementedUserReservationServiceServer
-}
+//type UserReservationService struct {
+//	pb.UnimplementedUserReservationServiceServer
+//}
 
 func NewReservationService(r *repository.ReservationRepository, l *log.Logger) *ReservationService {
 	return &ReservationService{r, l}
@@ -22,6 +21,10 @@ func NewReservationService(r *repository.ReservationRepository, l *log.Logger) *
 
 func (rs *ReservationService) Insert(reservation *model.Reservation) (*model.Reservation, error) {
 	return rs.Repo.Insert(reservation)
+}
+
+func (rs *ReservationService) InsertReservationRequest(reservationRequest *model.ReservationRequset) (*model.ReservationRequset, error) {
+	return rs.Repo.InsertReservationRequest(reservationRequest)
 }
 
 //func (rs *ReservationService) GetReservationByGuestId(ctx context.Context, req *pb.GetReservationRequest) (*pb.GetReservationResponse, error) {

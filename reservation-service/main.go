@@ -51,6 +51,10 @@ func main() {
 	postRouter.HandleFunc("/insert", reservationHandler.Insert)
 	postRouter.Use(reservationHandler.MiddlewareUserDeserialization)
 
+	postRequestRouter := router.Methods(http.MethodPost).Subrouter()
+	postRequestRouter.HandleFunc("/insertRequest", reservationHandler.InsertReservationRequest)
+	postRequestRouter.Use(reservationHandler.MiddlewareRequestDeserialization)
+
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
 	server := http.Server{

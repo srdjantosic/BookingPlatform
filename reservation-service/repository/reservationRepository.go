@@ -70,6 +70,12 @@ func (fr *ReservationRepository) GetCollection() *mongo.Collection {
 	return reservationsCollection
 }
 
+func (fr *ReservationRepository) GetCollectionRequests() *mongo.Collection {
+	bookingDatabase := fr.Cli.Database("booking")
+	reservationsCollection := bookingDatabase.Collection("reservations_requests")
+	return reservationsCollection
+}
+
 func (rr *ReservationRepository) GetAll(guestId string) (model.Reservations, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -101,4 +107,49 @@ func (rr *ReservationRepository) Insert(reservation *model.Reservation) (*model.
 	}
 	rr.Logger.Printf("Documents ID: %v\n", result.InsertedID)
 	return reservation, nil
+}
+
+func (rr *ReservationRepository) InsertReservationRequest(reservation_request *model.ReservationRequset) (*model.ReservationRequset, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	reservationsCollection := rr.GetCollection()
+	reservationsRequestsCollection := rr.GetCollectionRequests()
+
+	var reservations model.Reservations
+	reservationsCursor, err := reservationsCollection.Find(ctx, bson.M{
+		"apartmentId": reservation_request.ApartmentID})
+	if err != nil {
+		rr.Logger.Println(err)
+		return nil, err
+	}
+	if err = reservationsCursor.All(ctx, &reservations); err != nil {
+		rr.Logger.Println(err)
+		return nil, err
+	}
+
+	fmt.Println("*****************************************  ", len(reservations))
+	if len(reservations) < 1 {
+		return nil, err
+	}
+
+	req_startDate, _ := time.Parse("02-01-2006", reservation_request.StartDate)
+	req_endDate, _ := time.Parse("02-01-2006", reservation_request.EndDate)
+	for i := 0; i < len(reservations); i++ {
+		res_startDate, _ := time.Parse("02-01-2006", reservations[i].StartDate)
+		res_endDate, _ := time.Parse("02-01-2006", reservations[i].EndDate)
+		if req_startDate.After(res_startDate) && req_startDate.Before(res_endDate) {
+			return nil, err
+		}
+		if req_endDate.After(res_startDate) && req_endDate.Before(res_endDate) {
+			return nil, err
+		}
+	}
+
+	result, err := reservationsRequestsCollection.InsertOne(ctx, &reservation_request)
+	if err != nil {
+		rr.Logger.Println(err)
+		return nil, err
+	}
+	rr.Logger.Printf("Documents ID: %v\n", result.InsertedID)
+	return reservation_request, nil
 }

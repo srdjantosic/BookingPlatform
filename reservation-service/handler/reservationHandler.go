@@ -44,6 +44,23 @@ func (r *ReservationHandler) MiddlewareUserDeserialization(next http.Handler) ht
 		next.ServeHTTP(rw, h)
 	})
 }
+
+func (r *ReservationHandler) MiddlewareRequestDeserialization(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		reservationRequest := &model.ReservationRequset{}
+		err := reservationRequest.FromJSON(h.Body)
+		if err != nil {
+			http.Error(rw, "Unable to decode json", http.StatusBadRequest)
+			r.Logger.Fatal(err)
+			return
+		}
+
+		ctx := context.WithValue(h.Context(), KeyProduct{}, reservationRequest)
+		h = h.WithContext(ctx)
+
+		next.ServeHTTP(rw, h)
+	})
+}
 func (r *ReservationHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
 		r.Logger.Println("Method [", h.Method, "] - Hit path :", h.URL.Path)
@@ -60,6 +77,21 @@ func (rh *ReservationHandler) Insert(rw http.ResponseWriter, h *http.Request) {
 
 	createdReservation, err := rh.Service.Insert(reservation)
 	if createdReservation == nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusCreated)
+}
+
+func (rh *ReservationHandler) InsertReservationRequest(rw http.ResponseWriter, h *http.Request) {
+	reservation_request := h.Context().Value(KeyProduct{}).(*model.ReservationRequset)
+	reservation_request.ID = primitive.NewObjectID()
+
+	createdReservationRequest, err := rh.Service.InsertReservationRequest(reservation_request)
+	if createdReservationRequest == nil {
 		rw.WriteHeader(http.StatusBadRequest)
 	}
 

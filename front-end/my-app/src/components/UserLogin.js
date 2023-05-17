@@ -17,8 +17,8 @@ export default function UserLogin(){
       .then((result)=>
       {
         
-        localStorage.setItem('userId',result.data.id)
-        localStorage.setItem('role',result.data.role)
+        localStorage.setItem('userId',result.id)
+        localStorage.setItem('role',result.role)
         console.log(localStorage.getItem('role'))
         
         

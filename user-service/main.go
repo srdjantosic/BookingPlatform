@@ -72,6 +72,9 @@ func main() {
 	deleteReservaitonRouter := router.Methods(http.MethodDelete).Subrouter()
 	deleteReservaitonRouter.HandleFunc("/deleteReservation/{id}", userHandler.DeleteReservation)
 
+	deleteRequestRouter := router.Methods(http.MethodDelete).Subrouter()
+	deleteRequestRouter.HandleFunc("/delete/request/{id}", userHandler.DeleteRequest)
+
 	putRouter := router.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/update/{id}", userHandler.Update)
 	putRouter.Use(userHandler.MiddlewareUserDeserialization)

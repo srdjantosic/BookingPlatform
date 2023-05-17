@@ -241,6 +241,23 @@ func (ur *UserRepository) DeleteReservation(id string) error {
 	return nil
 }
 
+func (ur *UserRepository) DeleteRequest(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	reservationsCollection := ur.GetCollectionReservationsRequests()
+
+	objID, _ := primitive.ObjectIDFromHex(id)
+	result, err := reservationsCollection.DeleteOne(ctx, bson.M{"_id": objID})
+	if err != nil {
+		ur.Logger.Println(err)
+		return err
+	}
+
+	ur.Logger.Printf("Documents deleted : %v\n", result.DeletedCount)
+	return nil
+}
+
 func (ur *UserRepository) GetAllReservationsByUser(guestId string) (model.Reservations, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

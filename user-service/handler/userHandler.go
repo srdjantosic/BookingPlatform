@@ -141,6 +141,14 @@ func (uh *UserHandler) DeleteReservation(rw http.ResponseWriter, h *http.Request
 	rw.WriteHeader(http.StatusNoContent)
 }
 
+func (uh *UserHandler) DeleteRequest(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+
+	uh.Service.DeleteRequest(id)
+	rw.WriteHeader(http.StatusNoContent)
+}
+
 func (uh *UserHandler) GetAllReservationsByUser(rw http.ResponseWriter, h *http.Request) {
 	fmt.Println("USOOOOOOOOOOOOOOOOOOOOOO")
 	vars := mux.Vars(h)

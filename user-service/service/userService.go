@@ -65,6 +65,10 @@ func (us *UserService) DeleteReservation(id string) error {
 	return us.Repo.DeleteReservation(id)
 }
 
+func (us *UserService) DeleteRequest(id string) error {
+	return us.Repo.DeleteRequest(id)
+}
+
 func (us *UserService) GetAllReservationsByUser(guestId string) (model.Reservations, error) {
 	fmt.Println("USOOOOOOOOOOOOOOOOOOOOOO2222222222222222222")
 	reservations, err := us.Repo.GetAllReservationsByUser(guestId)

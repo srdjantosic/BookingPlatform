@@ -2,60 +2,48 @@ import React, { useEffect, useState } from 'react'
 import './styles/Login.css'
 import { useNavigate } from 'react-router-dom'
 
-
-
-const HostHomepage = () => {
-  const [apartments, setApartments] = useState([]);
+function HostHomepage(){
+    const [apartments, setApartments] = useState([]);
+    const[availableApartments, setAvailableApartments] = useState([]);
   
-  const[location, setLocation] = useState('');
-  const[availabilityStartDate, setAvailabilityStartDate] = useState('');
-  const[availabilityEndDate, setAvailabilityEndDate] = useState('');
-  const[number, setNumber] = useState('');
+    const[location, setLocation] = useState('');
+    const[availabilityStartDate, setAvailabilityStartDate] = useState('');
+    const[availabilityEndDate, setAvailabilityEndDate] = useState('');
+    const[number, setNumber] = useState('');
+
+    useEffect(()=>{
+
+        fetch("http://localhost:8080/api/apartment/",{
+        })
+        .then(res =>res.json())
+        .then((result)=> {
+            console.log(result)
+            setApartments(result);
+        })
+    }, []);
 
 
-
-
-
-
-
-  useEffect(()=>{
-
-    fetch("http://localhost:8080/api/apartment/",{
-    })
-    .then(res =>res.json())
-    .then((result)=>
-    {
-        setApartments(result);
+    const navigate = useNavigate();
+  
+    const navigateToAddNew = (e) =>{
+        e.preventDefault()
+        window.location.href = "/CreateApartment"
     }
-    )
-  }, [])
 
+    const search = (e) => {
 
-  const navigate = useNavigate();
-  
-  const navigateToAddNew = (e) =>{
-    e.preventDefault()
-    window.location.href = "/CreateApartment"
-}
+        document.getElementById('toHide').hidden=true;
+        document.getElementById('toShow').hidden=false;
 
-const search = (e) =>{
- 
-    fetch("http://localhost:8080/api/apartment/filter/"+location+"/"+number+"/"+availabilityStartDate+"/"+availabilityEndDate,{
-    
-      }).then((result) =>{
-        console.log(result)
-        //setApartments(result);
-        
-      })
-   
-}
+        fetch("http://localhost:8080/api/apartment/filter/" + location + "/" + number + "/" + availabilityStartDate + "/" + availabilityEndDate, {}).then(res => res.json()).then((result) => {
+            console.log(result)
+            setAvailableApartments(result)
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
 
-
-
-  return(
-   
-   
-    
+    return(
         <body>
             <div class="topnav">
                 <a class="active" href="/HostHomepage">Home Page</a>
@@ -64,35 +52,33 @@ const search = (e) =>{
                 <a href="/UserUpdate">Profile</a>
              
             </div>
-           
-            <div class="searcing">
-            <label>
-                    <p> Location</p>
-                    <input id="location" name="location" onChange={(e)=>setLocation(e.target.value)}/>
-                </label>
-                <label>
-                    <p> Number of persons</p>
-                    <input id="number" name="number" onChange={(e)=>setNumber(e.target.value)}/>
-                </label>
-                <label>
-                    <p> Start date</p>
-                    <input id="availabilityStartDate" name="availabilityStartDate" onChange={(e)=>setAvailabilityStartDate(e.target.value)}/>
-                </label>
-                <label>
-                    <p> End date</p>
-                    <input id="availabilityEndDate" name="availabilityEndDate" onChange={(e)=>setAvailabilityEndDate(e.target.value)}/>
-                </label>
-                <button onClick={search}> Search</button>
+            <div class="wrapper">
+                <table>
+                    <tr>
+                        <th>Location</th>
+                        <th>Number of persons</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td><input id="location" name="location" onChange={(e)=>setLocation(e.target.value)}/></td>
+                        <td><input id="number" name="number" onChange={(e)=>setNumber(e.target.value)}/></td>
+                        <td><input id="availabilityStartDate" name="availabilityStartDate" onChange={(e)=>setAvailabilityStartDate(e.target.value)}/></td>
+                        <td><input id="availabilityEndDate" name="availabilityEndDate" onChange={(e)=>setAvailabilityEndDate(e.target.value)}/></td>
+                        <td><button onClick={search}> Search</button></td>
+                    </tr>
+                </table>
             </div>
             <div className='wrapper'>
-                <table>
+                <table id="toHide">
                     <tr>
                         <th>Name</th>
                         <th>Location</th>
                         <th>Benefits</th>
                         <th>Minimum number of guests</th>
                         <th>Maximum number of guests</th>
-                        
+                        <th></th>
                     </tr>
                     {apartments.map((val, key) => {
                         return(
@@ -102,47 +88,52 @@ const search = (e) =>{
                                 <td>{val.benefits}</td>
                                 <td>{val.minGuestsNumber}</td>
                                 <td>{val.maxGuestsNumber}</td>
-                            
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
-
                                         localStorage.setItem('Id', val.id)
-
-                                        //navigate(`/SeeApartmet/`+val.id);
-                                        
-                                    }}>View</button>
-                                </td>
-                                <td>
-                                    <button onClick={(e) => {
-                                        
-
-                                        localStorage.setItem('Id', val.id)
-
-                                      //  navigate(`/UpdateOrder/`+val.id);
-                                        
-                                    }}>Delete</button>
-                                </td>
-                                <td>
-                                    <button onClick={(e) =>{
-                                         localStorage.setItem('Id', val.id);
-                                       // deleteOrder();
-                                       
-                                    }}
-                                    >Cancel</button>
+                                        }}>View
+                                    </button>
                                 </td>
                             </tr>
                         )
                     })}
                 </table>
-
+                <table id="toShow" hidden='true'>
+                    <tr>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Benefits</th>
+                        <th>Minimum number of guests</th>
+                        <th>Maximum number of guests</th>
+                        <th>Total Price</th>
+                        <th>Unit Price</th>
+                        <th></th>
+                    </tr>
+                    {availableApartments.map((val, key) => {
+                        return(
+                            <tr key={key} >
+                                <td>{val.Apartment.name}</td>
+                                <td>{val.Apartment.location}</td>
+                                <td>{val.Apartment.benefits}</td>
+                                <td>{val.Apartment.minGuestsNumber}</td>
+                                <td>{val.Apartment.maxGuestsNumber}</td>
+                                <td>{val.TotalPrice}</td>
+                                <td>{val.UnitPrice}</td>
+                                <td>
+                                    <button onClick={(e) => {
+                                        e.preventDefault()
+                                        localStorage.setItem('Id', val.id)
+                                    }}>View
+                                    </button>
+                                </td>
+                            </tr>
+                        )
+                    })}
+                </table>
             </div>
-            
-           
         </body>
-    
   )
- 
 }
 
 export default HostHomepage

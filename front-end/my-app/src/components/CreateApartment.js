@@ -2,41 +2,35 @@ import {useState} from 'react';
 import './styles/Login.css';
 
 export default function CreateApartment() {
-  
 
     const[name, setName] = useState('')
     const[location, setLocation] = useState('')
     const[benefits, setBenefits] = useState('')
-    const[minGuestsNumber, setMinGuestsNumber] = useState('')
-    const[maxGuestsNumber, setMaxGuestsNumber] = useState('')
-    const[automaticReservation, setAutomaticReservation] = useState('')
+    const[minNumber, setMinGuestsNumber] = useState('')
+    const[maxNumber, setMaxGuestsNumber] = useState('')
+    const[autoReservation, setAutomaticReservation] = useState('')
 
     const handleClick = (e) =>{
+        e.preventDefault()
+
         var userId=localStorage.getItem('userId');
         var role= localStorage.getItem('role');
+
         var regexPattern = new RegExp("true");
-        var boolValue1 = regexPattern.test(automaticReservation);
-        e.preventDefault()
-        var number = parseInt(minGuestsNumber, 10 );
-        var number1 = parseInt(maxGuestsNumber, 10 );
-        const new_apartment = {name, location, benefits, number, number1,boolValue1};
+        var automaticReservation = regexPattern.test(autoReservation);
+        var minGuestsNumber = parseInt(minNumber);
+        var maxGuestsNumber = parseInt(maxNumber );
+        const new_apartment = {name, location, benefits, minGuestsNumber, maxGuestsNumber, automaticReservation};
   
         fetch("http://localhost:8080/api/apartment/insert/"+role+"/"+userId,{ 
         method:"POST",
-       // headers:{},
         body:JSON.stringify(new_apartment)
       }).then(() =>{
         alert("Successful created!")
-        //window.location.href = '/';
         console.log(new_apartment)
       }).catch((err) => {
         console.log(err)
       });
-      }
-      const handleClick1 = (e) =>{
-        
-        window.location.href = '/DefineAvailableTerm';
-     
       }
 
     return(
@@ -47,7 +41,7 @@ export default function CreateApartment() {
                 <a >Contracts</a>
                 <a href="/UserUpdate">Profile</a>
              
-            </div>
+        </div>
         <div className="wrapper">
         <form >
           <h1>Create new apartment</h1>
@@ -88,14 +82,10 @@ export default function CreateApartment() {
                 </label>
             </fieldset>
             
-            <button type="submit" onClick={handleClick}>submit</button>
+            <button type="submit" onClick={handleClick}>Create</button>
         
         </form>
-        
-        <button type="submit" onClick={handleClick1}>Define</button>
-      </div>
-      <div className="bodyImg"></div>
-      <div className="wrapper">@Chocolate Factory Novi Sad since 2000</div>
+        </div>
       </body>
     )
 }

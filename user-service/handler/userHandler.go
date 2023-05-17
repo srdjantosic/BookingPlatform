@@ -4,7 +4,6 @@ import (
 	"BookingPlatform/user-service/model"
 	"BookingPlatform/user-service/service"
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
@@ -82,12 +81,9 @@ func (u *UserHandler) GetUserByUsernameAndPassword(rw http.ResponseWriter, h *ht
 		rw.WriteHeader(http.StatusBadRequest)
 	}
 
-	//rw.WriteHeader(http.StatusOK)
-	json.NewEncoder(rw).Encode(map[string]interface{}{
-		"status":     "success",
-		"statusCode": 200,
-		"data":       user,
-	})
+	user.ToJSON(rw)
+	rw.WriteHeader(http.StatusOK)
+
 }
 
 func (u *UserHandler) Update(rw http.ResponseWriter, h *http.Request) {

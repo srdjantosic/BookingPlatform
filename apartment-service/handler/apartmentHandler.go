@@ -4,7 +4,6 @@ import (
 	"BookingPlatform/apartment-service/model"
 	"BookingPlatform/apartment-service/service"
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
@@ -138,9 +137,5 @@ func (a *ApartmentHandler) FilterApartments(rw http.ResponseWriter, h *http.Requ
 		return
 	}
 
-	json.NewEncoder(rw).Encode(map[string]interface{}{
-		"status":     "success",
-		"statusCode": 200,
-		"data":       apartments,
-	})
+	apartments.ToJSON(rw)
 }

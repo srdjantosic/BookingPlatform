@@ -50,10 +50,6 @@ func (us *UserService) Update(id string, userToUpdate *model.User) error {
 			user.Password = userToUpdate.Password
 		}
 		if userToUpdate.Username != "" {
-			_, err := us.Repo.FindByUsername(userToUpdate.Username)
-			if err == nil {
-				return fmt.Errorf("Username is already exist!")
-			}
 			user.Username = userToUpdate.Username
 		}
 		err = us.Repo.Update(id, user)

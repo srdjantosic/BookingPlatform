@@ -12,11 +12,6 @@ export default function UserLogin(){
       e.preventDefault()
     
       fetch("http://localhost:8080/api/user/" + username+"/"+password,{
-        headers : { 
-          
-          'Accept': 'application/json'
-         
-         },
       })
       .then(res =>res.json())
       .then((result)=>
@@ -61,8 +56,6 @@ window.location.href='/Homepage';
     <div className="wrapper">
         Create an account? <a href="/UserRegistration">Sing Up</a>
     </div>
-    <div className="bodyImg"></div>
-    <div className="wrapper">@Chocolate Factory Novi Sad since 2000</div>
   </body>
  );
 

@@ -14,12 +14,6 @@ type ApartmentService struct {
 	Logger *log.Logger
 }
 
-type AvailableApartment struct {
-	Apartment  *model.Apartment
-	TotalPrice int
-	UnitPrice  int
-}
-
 func NewApartmentService(r *repository.ApartmentRepository, l *log.Logger) *ApartmentService {
 	return &ApartmentService{r, l}
 }
@@ -48,7 +42,7 @@ func (as *ApartmentService) InsertPricelistItem(item *model.PricelistItem, apart
 	return fmt.Errorf("You are not authorized for this function!")
 }
 
-func (as *ApartmentService) FilterApartments(location string, guestsNumber int, start string, end string) ([]AvailableApartment, error) {
+func (as *ApartmentService) FilterApartments(location string, guestsNumber int, start string, end string) (model.AvailableApartments, error) {
 	apartments, err := as.GetAll()
 	if err != nil {
 		as.Logger.Println(err)
@@ -67,7 +61,7 @@ func (as *ApartmentService) FilterApartments(location string, guestsNumber int, 
 		return nil, fmt.Errorf("No apartments by defined filter!")
 	}
 
-	var availableApartments []AvailableApartment
+	var availableApartments model.AvailableApartments
 
 	for i := 0; i < len(filteredApartments); i++ {
 
@@ -85,11 +79,11 @@ func (as *ApartmentService) FilterApartments(location string, guestsNumber int, 
 				if filteredApartments[i].Pricelist[j].UnitPrice == 0 {
 					totalPrice := guestsNumber * filteredApartments[i].Pricelist[j].Price * int(filterEndDate.Sub(filterStartDate).Hours()/24)
 					unitPrice := filteredApartments[i].Pricelist[j].Price
-					availableApartments = append(availableApartments, AvailableApartment{filteredApartments[i], totalPrice, unitPrice})
+					availableApartments = append(availableApartments, &model.AvailableApartment{filteredApartments[i], totalPrice, unitPrice})
 				} else {
 					totalPrice := filteredApartments[i].Pricelist[j].Price * int(filterEndDate.Sub(filterStartDate).Hours()/24)
 					unitPrice := filteredApartments[i].Pricelist[j].Price
-					availableApartments = append(availableApartments, AvailableApartment{filteredApartments[i], totalPrice, unitPrice})
+					availableApartments = append(availableApartments, &model.AvailableApartment{filteredApartments[i], totalPrice, unitPrice})
 				}
 			}
 		}

@@ -94,8 +94,10 @@ func (us *UserService) InsertReservationRequest(reservation *model.ReservationRe
 		newReservation.GuestID = reservation.UserID
 		newReservation.GuestsNumber = reservation.GuestsNumber
 		us.Repo.InsertReservation(newReservation)
-		return nil, err
+		return reservation, err
 	}
+
+	us.Logger.Println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FALSE^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 
 	return us.Repo.InsertReservationRequest(reservation)
 }

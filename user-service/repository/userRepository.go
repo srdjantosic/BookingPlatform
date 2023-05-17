@@ -148,10 +148,12 @@ func (ur *UserRepository) GetApartmentById(apartmentId primitive.ObjectID) (*mod
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
+	ur.Logger.Println("^^^^^^^^^^^  ", apartmentId, " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
 	apartmentssCollection := ur.GetCollectionApartments()
 
 	var apartment model.Apartment
-	err := apartmentssCollection.FindOne(ctx, bson.M{"apartmentId": apartmentId}).Decode(&apartment)
+	err := apartmentssCollection.FindOne(ctx, bson.M{"_id": apartmentId}).Decode(&apartment)
 	if err != nil {
 		ur.Logger.Println(err)
 		return nil, err

@@ -292,3 +292,46 @@ func (ur *UserRepository) InsertReservationRequest(reservationRequest *model.Res
 	ur.Logger.Printf("Documents ID: %v\n", result.InsertedID)
 	return reservationRequest, nil
 }
+
+func (ur *UserRepository) AcceptRequest(id string) (*model.ReservationRequset, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	requestsCollection := ur.GetCollectionReservationsRequests()
+
+	var reservationRequest model.ReservationRequset
+	objID, _ := primitive.ObjectIDFromHex(id)
+	err := requestsCollection.FindOne(ctx, bson.M{"_id": objID}).Decode(&reservationRequest)
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+
+	//delete all requests with same startDate and endDate
+	_, err2 := requestsCollection.DeleteMany(ctx, bson.M{
+		"startDate": reservationRequest.StartDate,
+		"endDate":   reservationRequest.EndDate})
+	if err2 != nil {
+		ur.Logger.Println(err2)
+		return nil, err2
+	}
+
+	reservationCollection := ur.GetCollectionReservations()
+
+	reservation := model.Reservation{
+		ID:           reservationRequest.ID,
+		GuestID:      reservationRequest.UserID,
+		ApartmentID:  reservationRequest.ApartmentID,
+		StartDate:    reservationRequest.StartDate,
+		EndDate:      reservationRequest.EndDate,
+		GuestsNumber: reservationRequest.GuestsNumber,
+	}
+
+	result, err := reservationCollection.InsertOne(ctx, &reservation)
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+
+	ur.Logger.Printf("Documents ID: %v\n", result.InsertedID)
+	return &reservationRequest, nil
+}

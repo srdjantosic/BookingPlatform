@@ -193,3 +193,18 @@ func (uh *UserHandler) InsertReservationRequest(rw http.ResponseWriter, h *http.
 	}
 	rw.WriteHeader(http.StatusCreated)
 }
+
+func (uh *UserHandler) AcceptRequest(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+
+	createdReservation, err := uh.Service.AcceptRequest(id)
+	if createdReservation == nil {
+		uh.Logger.Printf("*******************************************************")
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusCreated)
+}

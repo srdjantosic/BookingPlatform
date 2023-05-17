@@ -101,3 +101,8 @@ func (us *UserService) InsertReservationRequest(reservation *model.ReservationRe
 
 	return us.Repo.InsertReservationRequest(reservation)
 }
+
+func (us *UserService) AcceptRequest(id string) (*model.ReservationRequset, error) {
+
+	return us.Repo.AcceptRequest(id)
+}

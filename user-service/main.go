@@ -54,6 +54,12 @@ func main() {
 	logInRouter := router.Methods(http.MethodGet).Subrouter()
 	logInRouter.HandleFunc("/{username}/{password}", userHandler.GetUserByUsernameAndPassword)
 
+	reservationsRouter := router.Methods(http.MethodGet).Subrouter()
+	reservationsRouter.HandleFunc("/getReservations/{id}", userHandler.GetAllReservationsByUser)
+
+	deleteReservaitonRouter := router.Methods(http.MethodDelete).Subrouter()
+	deleteReservaitonRouter.HandleFunc("/deleteReservation/{id}", userHandler.DeleteReservation)
+
 	putRouter := router.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/update/{id}", userHandler.Update)
 	putRouter.Use(userHandler.MiddlewareUserDeserialization)

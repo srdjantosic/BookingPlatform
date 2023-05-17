@@ -13,3 +13,7 @@ type ReservationService struct {
 func NewReservationService(r *repository.ReservationRepository, l *log.Logger) *ReservationService {
 	return &ReservationService{r, l}
 }
+
+func (rs *ReservationService) Delete(id string) error {
+	return nil
+}

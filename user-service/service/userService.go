@@ -60,8 +60,15 @@ func (us *UserService) Update(id string, userToUpdate *model.User) error {
 	}
 	return fmt.Errorf("You are not authorized for this function!")
 }
+func (us *UserService) DeleteReservation(id string) error {
+	return us.Repo.DeleteReservation(id)
+}
 
-func (us *UserService) Delete(id string) error {
-
-	return nil
+func (us *UserService) GetAllReservationsByUser(guestId string) (model.Reservations, error) {
+	reservations, err := us.Repo.GetAllReservationsByUser(guestId)
+	if err != nil {
+		us.Logger.Println(err)
+		return nil, err
+	}
+	return reservations, nil
 }

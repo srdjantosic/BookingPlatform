@@ -51,8 +51,12 @@ func main() {
 	postRouter.HandleFunc("/insert", userHandler.Insert)
 	postRouter.Use(userHandler.MiddlewareUserDeserialization)
 
+	postReservation := router.Methods(http.MethodPost).Subrouter()
+	postReservation.HandleFunc("/insertReservation", userHandler.InsertReservation)
+	postReservation.Use(userHandler.MiddlewareReservationDeserialization)
+
 	logInRouter := router.Methods(http.MethodGet).Subrouter()
-	logInRouter.HandleFunc("/{username}/{password}", userHandler.GetUserByUsernameAndPassword)
+	logInRouter.HandleFunc("/login/{username}/{password}", userHandler.GetUserByUsernameAndPassword)
 
 	reservationsRouter := router.Methods(http.MethodGet).Subrouter()
 	reservationsRouter.HandleFunc("/getReservations/{id}", userHandler.GetAllReservationsByUser)

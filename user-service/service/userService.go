@@ -72,3 +72,7 @@ func (us *UserService) GetAllReservationsByUser(guestId string) (model.Reservati
 	}
 	return reservations, nil
 }
+
+func (us *UserService) InsertReservation(reservation *model.Reservation) (*model.Reservation, error) {
+	return us.Repo.InsertReservation(reservation)
+}

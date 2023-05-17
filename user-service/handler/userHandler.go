@@ -62,6 +62,23 @@ func (u *UserHandler) MiddlewareReservationDeserialization(next http.Handler) ht
 		next.ServeHTTP(rw, h)
 	})
 }
+
+func (u *UserHandler) MiddlewareRequestDeserialization(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		user := &model.ReservationRequset{}
+		err := user.FromJSON(h.Body)
+		if err != nil {
+			http.Error(rw, "Unable to decode json", http.StatusBadRequest)
+			u.Logger.Fatal(err)
+			return
+		}
+
+		ctx := context.WithValue(h.Context(), KeyProduct{}, user)
+		h = h.WithContext(ctx)
+
+		next.ServeHTTP(rw, h)
+	})
+}
 func (u *UserHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
 		u.Logger.Println("Method [", h.Method, "] - Hit path :", h.URL.Path)
@@ -157,6 +174,36 @@ func (uh *UserHandler) InsertReservation(rw http.ResponseWriter, h *http.Request
 		rw.WriteHeader(http.StatusBadRequest)
 	}
 
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusCreated)
+}
+
+func (uh *UserHandler) InsertReservationRequest(rw http.ResponseWriter, h *http.Request) {
+	reservationRequest := h.Context().Value(KeyProduct{}).(*model.ReservationRequset)
+	reservationRequest.ID = primitive.NewObjectID()
+
+	createdReservation, err := uh.Service.InsertReservationRequest(reservationRequest)
+	if createdReservation == nil {
+		uh.Logger.Printf("*******************************************************")
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusCreated)
+}
+
+func (uh *UserHandler) AcceptRequest(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+
+	createdReservation, err := uh.Service.AcceptRequest(id)
+	if createdReservation == nil {
+		uh.Logger.Printf("*******************************************************")
+		rw.WriteHeader(http.StatusBadRequest)
+	}
 	if err != nil {
 		rw.WriteHeader(http.StatusBadRequest)
 	}

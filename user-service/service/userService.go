@@ -4,6 +4,7 @@ import (
 	"BookingPlatform/user-service/model"
 	"BookingPlatform/user-service/repository"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 )
 
@@ -76,4 +77,33 @@ func (us *UserService) GetAllReservationsByUser(guestId string) (model.Reservati
 
 func (us *UserService) InsertReservation(reservation *model.Reservation) (*model.Reservation, error) {
 	return us.Repo.InsertReservation(reservation)
+}
+
+func (us *UserService) InsertReservationRequest(reservation *model.ReservationRequset) (*model.ReservationRequset, error) {
+	apartment, err := us.Repo.GetApartmentById(reservation.ApartmentID)
+	if err != nil {
+		us.Logger.Println(err)
+		return nil, err
+	}
+
+	if apartment.AutomaticReservation == true {
+		newReservation := new(model.Reservation)
+		newReservation.StartDate = reservation.StartDate
+		newReservation.ID = primitive.NewObjectID()
+		newReservation.EndDate = reservation.EndDate
+		newReservation.ApartmentID = reservation.ApartmentID
+		newReservation.GuestID = reservation.UserID
+		newReservation.GuestsNumber = reservation.GuestsNumber
+		us.Repo.InsertReservation(newReservation)
+		return reservation, err
+	}
+
+	us.Logger.Println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FALSE^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+	return us.Repo.InsertReservationRequest(reservation)
+}
+
+func (us *UserService) AcceptRequest(id string) (*model.ReservationRequset, error) {
+
+	return us.Repo.AcceptRequest(id)
 }

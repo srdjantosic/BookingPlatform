@@ -161,3 +161,17 @@ func (uh *UserHandler) InsertReservation(rw http.ResponseWriter, h *http.Request
 	}
 	rw.WriteHeader(http.StatusCreated)
 }
+
+func (uh *UserHandler) InsertReservationRequest(rw http.ResponseWriter, h *http.Request) {
+	reservationRequest := h.Context().Value(KeyProduct{}).(*model.ReservationRequset)
+	reservationRequest.ID = primitive.NewObjectID()
+
+	createdReservation, err := uh.Service.InsertReservationRequest(reservationRequest)
+	if createdReservation == nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusCreated)
+}

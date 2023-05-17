@@ -74,6 +74,18 @@ func (ur *UserRepository) GetCollectionReservations() *mongo.Collection {
 	return reservationsCollection
 }
 
+func (ur *UserRepository) GetCollectionApartments() *mongo.Collection {
+	bookingDatabase := ur.Cli.Database("booking")
+	reservationsCollection := bookingDatabase.Collection("apartments")
+	return reservationsCollection
+}
+
+func (ur *UserRepository) GetCollectionReservationsRequests() *mongo.Collection {
+	bookingDatabase := ur.Cli.Database("booking")
+	reservationsCollection := bookingDatabase.Collection("reservations_requests")
+	return reservationsCollection
+}
+
 func (ur *UserRepository) GetOne(id string) (*model.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -130,6 +142,22 @@ func (ur *UserRepository) FindByUsernameAndPassword(username string, password st
 	}
 
 	return &user, nil
+}
+
+func (ur *UserRepository) GetApartmentById(apartmentId primitive.ObjectID) (*model.Apartment, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	apartmentssCollection := ur.GetCollectionApartments()
+
+	var apartment model.Apartment
+	err := apartmentssCollection.FindOne(ctx, bson.M{"apartmentId": apartmentId}).Decode(&apartment)
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+
+	return &apartment, nil
 }
 
 func (ur *UserRepository) Update(id string, user *model.User) error {
@@ -247,4 +275,18 @@ func (ur *UserRepository) InsertReservation(reservation *model.Reservation) (*mo
 	}
 	ur.Logger.Printf("Documents ID: %v\n", result.InsertedID)
 	return reservation, nil
+}
+
+func (ur *UserRepository) InsertReservationRequest(reservationRequest *model.ReservationRequset) (*model.ReservationRequset, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	reservationsCollection := ur.GetCollectionReservationsRequests()
+
+	result, err := reservationsCollection.InsertOne(ctx, &reservationRequest)
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+	ur.Logger.Printf("Documents ID: %v\n", result.InsertedID)
+	return reservationRequest, nil
 }

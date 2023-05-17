@@ -27,6 +27,10 @@ func (rs *ReservationService) InsertReservationRequest(reservationRequest *model
 	return rs.Repo.InsertReservationRequest(reservationRequest)
 }
 
+func (rs *ReservationService) Delete(id string) error {
+	return rs.Repo.Delete(id)
+}
+
 //func (rs *ReservationService) GetReservationByGuestId(ctx context.Context, req *pb.GetReservationRequest) (*pb.GetReservationResponse, error) {
 //	reservations, err := rs.Repo.GetAll(req.GuestId)
 //

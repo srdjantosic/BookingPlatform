@@ -5,6 +5,7 @@ import (
 	"BookingPlatform/reservation-service/service"
 	"context"
 	"fmt"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
@@ -99,4 +100,12 @@ func (rh *ReservationHandler) InsertReservationRequest(rw http.ResponseWriter, h
 		rw.WriteHeader(http.StatusBadRequest)
 	}
 	rw.WriteHeader(http.StatusCreated)
+}
+
+func (rh *ReservationHandler) DeleteReservation(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+
+	rh.Service.Delete(id)
+	rw.WriteHeader(http.StatusNoContent)
 }

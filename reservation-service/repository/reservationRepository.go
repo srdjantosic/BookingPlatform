@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -152,4 +153,37 @@ func (rr *ReservationRepository) InsertReservationRequest(reservation_request *m
 	}
 	rr.Logger.Printf("Documents ID: %v\n", result.InsertedID)
 	return reservation_request, nil
+}
+
+func (rr *ReservationRepository) Delete(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	reservationsCollection := rr.GetCollection()
+
+	var reservation model.Reservation
+	objID, _ := primitive.ObjectIDFromHex(id)
+	err := reservationsCollection.FindOne(ctx, bson.M{"_id": objID}).Decode(&reservation)
+	if err != nil {
+		rr.Logger.Println(err)
+		return err
+	}
+
+	today := time.Now()
+	res_time, _ := time.Parse("02-01-2006", reservation.StartDate)
+	tomorrow := today.Add(24 * time.Hour)
+	if tomorrow.After(res_time) {
+		return nil
+	}
+
+	filter := bson.D{{Key: "_id", Value: objID}}
+	result, err := reservationsCollection.DeleteOne(ctx, filter)
+
+	if err != nil {
+		rr.Logger.Println(err)
+		return err
+	}
+
+	rr.Logger.Printf("Documents deleted : %v\n", result.DeletedCount)
+	return nil
 }

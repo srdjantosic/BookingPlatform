@@ -9,6 +9,7 @@ import UserUpdate from './components/UserUpdate';
 import Homepage from './components/Homepage';
 import CreateApartment from './components/CreateApartment';
 import DefineAvailableTerm from './components/DefineAvailableTerm';
+import HostHomepage from './components/HostHomepage';
 
 
 ReactDOM.render(
@@ -16,10 +17,12 @@ ReactDOM.render(
     <Routes>
         <Route path='/' element={<UserLogin/>}/>
         <Route path='/UserRegistration' element = {<UserRegistration/>}/>
-        <Route path='/UserUpdate/:id' element = {<UserUpdate/>}/>
+        <Route path='/UserUpdate' element = {<UserUpdate/>}/>
         <Route path='/Homepage' element = {<Homepage/>}/>
         <Route path='/CreateApartment' element = {<CreateApartment/>}/>
         <Route path='/DefineAvailableTerm' element = {<DefineAvailableTerm/>}/>
+        <Route path='/HostHomepage' element = {<HostHomepage/>}/>
+        
     </Routes>
   </Router>,
  document.getElementById('root')

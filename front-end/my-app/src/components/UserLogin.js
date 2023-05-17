@@ -28,7 +28,7 @@ export default function UserLogin(){
         
         console.log(localStorage.getItem('user_userName'));
           if(localStorage.getItem('role')==="HOST"){
-            window.location.href='/CreateApartment';
+            window.location.href='/HostHomepage';
           } else{
         console.log(localStorage.getItem('userId'));
 window.location.href='/Homepage';

@@ -34,6 +34,13 @@ export default function UserUpdate() {
 
     return(
       <body>
+        <div class="topnav">
+                <a href="/Homepage">Home Page</a>
+                <a class="active" href="/">Your orders</a>
+                <a >Contracts</a>
+                <a href="/UserUpdate">Profile</a>
+             
+            </div>
         <div className="wrapper">
         <form onSubmit={handleClick}>
           <h1>User update</h1>

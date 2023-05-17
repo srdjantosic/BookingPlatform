@@ -67,6 +67,15 @@
     text-decoration: none;
     font-size: 17px;
 }
+.searcing {
+    float: top;
+    display:flex;
+    padding: 42px;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box
+}
   
 .topnav a:hover {
     background-color: #ddd;

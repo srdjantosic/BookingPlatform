@@ -29,6 +29,13 @@ export default function DefineAvailableTerm() {
 
     return(
       <body>
+        <div class="topnav">
+                <a href="/Homepage">Home Page</a>
+                <a class="active" href="/">Your orders</a>
+                <a >Contracts</a>
+                <a href="/UserUpdate">Profile</a>
+             
+            </div>
         <div className="wrapper">
         <form >
           <h1>Define free term</h1>

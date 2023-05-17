@@ -214,7 +214,7 @@ func (ur *UserRepository) DeleteReservation(id string) error {
 func (ur *UserRepository) GetAllReservationsByUser(guestId string) (model.Reservations, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	fmt.Println("USOOOOOOOOOOOOOOOOOOOOOO33333333333333333333")
+
 	reservationsCollection := ur.GetCollectionReservations()
 
 	objID, _ := primitive.ObjectIDFromHex(guestId)

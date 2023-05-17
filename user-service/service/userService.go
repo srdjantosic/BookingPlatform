@@ -65,6 +65,7 @@ func (us *UserService) DeleteReservation(id string) error {
 }
 
 func (us *UserService) GetAllReservationsByUser(guestId string) (model.Reservations, error) {
+	fmt.Println("USOOOOOOOOOOOOOOOOOOOOOO2222222222222222222")
 	reservations, err := us.Repo.GetAllReservationsByUser(guestId)
 	if err != nil {
 		us.Logger.Println(err)

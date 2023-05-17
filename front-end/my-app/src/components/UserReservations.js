@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom'
 
 
 const UserReservations = () => {
-  const [apartments, setApartments] = useState([]);
-  
-  const[location, setLocation] = useState('');
+
+  const[reservations, setReservations] = useState('');
   const[availabilityStartDate, setAvailabilityStartDate] = useState('');
   const[availabilityEndDate, setAvailabilityEndDate] = useState('');
   const[number, setNumber] = useState('');
@@ -20,12 +19,12 @@ const UserReservations = () => {
 
   useEffect(()=>{
 
-    fetch("http://localhost:8080/api/apartment/",{
+    fetch("http://localhost:8080/api/user/getReservations/"+ localStorage.getItem('userId'),{
     })
     .then(res =>res.json())
     .then((result)=>
     {
-        setApartments(result);
+        setReservations(result);
     }
     )
   }, [])
@@ -53,21 +52,20 @@ const UserReservations = () => {
             <div className='wrapper'>
                 <table>
                     <tr>
-                        <th>User</th>
+                        
                         <th>Apartment</th>
                         <th>Start date</th>
                         <th>End date </th>
                         <th>Number of guests</th>
                         
                     </tr>
-                    {apartments.map((val, key) => {
+                    {reservations.map((val, key) => {
                         return(
                             <tr key={key} >
-                                <td>{val.name}</td>
-                                <td>{val.location}</td>
-                                <td>{val.benefits}</td>
-                                <td>{val.minGuestsNumber}</td>
-                                <td>{val.maxGuestsNumber}</td>
+                                <td>{val.apartmentId}</td>
+                                <td>{val.startDate}</td>
+                                <td>{val.endDate}</td>
+                                <td>{val.guestsNumber}</td>
                             
                                 <td>
                                     <button onClick={(e) => {

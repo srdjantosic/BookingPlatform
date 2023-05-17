@@ -213,11 +213,12 @@ func (ur *UserRepository) DeleteReservation(id string) error {
 func (ur *UserRepository) GetAllReservationsByUser(guestId string) (model.Reservations, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
+	fmt.Println("USOOOOOOOOOOOOOOOOOOOOOO33333333333333333333")
 	reservationsCollection := ur.GetCollectionReservations()
 
 	var reservations model.Reservations
-	flightsCursor, err := reservationsCollection.Find(ctx, bson.M{"guestId": guestId})
+	//objID, _ := primitive.ObjectIDFromHex(guestId)
+	flightsCursor, err := reservationsCollection.Find(ctx, bson.M{})
 	if err != nil {
 		ur.Logger.Println(err)
 		return nil, err

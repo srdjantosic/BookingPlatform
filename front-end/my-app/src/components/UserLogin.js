@@ -11,7 +11,7 @@ export default function UserLogin(){
     const handleSubmit = (e) =>{
       e.preventDefault()
     
-      fetch("http://localhost:8080/api/user/" + username+"/"+password,{
+      fetch("http://localhost:8080/api/user/login/" + username+"/"+password,{
       })
       .then(res =>res.json())
       .then((result)=>

@@ -1,25 +1,30 @@
 import {useState} from 'react';
 import './styles/Login.css';
-import MenuItem from '@mui/material/MenuItem';
+
 export default function DefineAvailableTerm() {
-  
 
     const[availabilityStartDate, setAvailabilityStartDate] = useState('')
     const[availabilityEndDate, setAvailabilityEndDate] = useState('')
     const[price, setPrice] = useState('')
     const[unitPrice, setUnitPrice] = useState('')
     var [productId, setProductId] = useState('');
-    
-    const handleChange = (event) => {
-        setProductId(event.target.value);
-      };
 
     const handleClick = (e) =>{
-       
-      }
-      const handleClick1 = (e) =>{
-        
-     
+        e.preventDefault()
+        var number = parseInt(price, 10 );
+        var number1 = parseInt(unitPrice, 10 );
+        const new_user = {availabilityStartDate, availabilityEndDate, number, number1}
+        console.log(new_user)
+        fetch("http://localhost:8080/api/apartment/insertItem/"+productId+"/"+localStorage.getItem('role'),{ 
+        method:"POST",
+       // headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(new_user)
+      }).then(() =>{
+        alert("Successful registration!")
+      
+      }).catch((err) => {
+        console.log(err)
+      });
       }
 
     return(
@@ -28,23 +33,19 @@ export default function DefineAvailableTerm() {
         <form >
           <h1>Define free term</h1>
 
+            <fieldset>
+            <label>
+    Choose apartment
+      <select  onClick={(e)=>setProductId(e.target.value)}>
+        <option value="64649928bd67705a903c9f03">Lux Apartmani</option>
+        <option value="6464a00161417e4661d07d07">Apartmani Zavicaj</option>
+      </select>
+    </label>
+            </fieldset>
 
-          <inputlabel id="demo-simple-select-label">Product name</inputlabel>
-<select
-  labelId="demo-simple-select-label"
-  id="demo-simple-select"
-  value={productId}
-  label="Age"
-  onChange={handleChange}
->
-  <MenuItem value={"64649928bd67705a903c9f03"}>Lux Apartmani</MenuItem>
-  <MenuItem value={"64649928bd67705a903c9f03"}>Apartmani zavicaj</MenuItem>
-  
- 
-</select>
           <fieldset>
                 <label>
-                    <p> Start date :</p>
+                    <p> Start date </p>
                     <input id="availabilityStartDate" name="availabilityStartDate" onChange={(e)=>setAvailabilityStartDate(e.target.value)}/>
                 </label>
             </fieldset>
@@ -72,8 +73,8 @@ export default function DefineAvailableTerm() {
 
         </form>
       </div>
-      <div className="bodyImg"></div>
-      <div className="wrapper">@Chocolate Factory Novi Sad since 2000</div>
+ 
+      
       </body>
     )
 }

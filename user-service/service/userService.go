@@ -4,6 +4,7 @@ import (
 	"BookingPlatform/user-service/model"
 	"BookingPlatform/user-service/repository"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 )
 
@@ -76,4 +77,27 @@ func (us *UserService) GetAllReservationsByUser(guestId string) (model.Reservati
 
 func (us *UserService) InsertReservation(reservation *model.Reservation) (*model.Reservation, error) {
 	return us.Repo.InsertReservation(reservation)
+}
+
+// TODO
+func (us *UserService) FindAllApartmentsByHostId(hostId primitive.ObjectID) (model.Apartments, error) {
+
+	apartments, err := us.Repo.FindAllApartmentsByHostId(hostId)
+	if err != nil {
+		us.Logger.Println(err)
+		return nil, err
+	}
+
+	return apartments, nil
+}
+
+func (us *UserService) FindAllReservationRequestsByApartments(apartments model.Apartments) (model.ReservationRequests, error) {
+
+	reservationRequests, err := us.Repo.FindAllReservationRequestsByApartments(apartments)
+	if err != nil {
+		us.Logger.Println(err)
+		return nil, err
+	}
+
+	return reservationRequests, nil
 }

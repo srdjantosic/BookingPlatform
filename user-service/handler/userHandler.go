@@ -162,3 +162,47 @@ func (uh *UserHandler) InsertReservation(rw http.ResponseWriter, h *http.Request
 	}
 	rw.WriteHeader(http.StatusCreated)
 }
+func (uh *UserHandler) FindAllApartmentsByHostId(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+	objID, _ := primitive.ObjectIDFromHex(id)
+	apartments, err := uh.Service.FindAllApartmentsByHostId(objID)
+
+	if err != nil {
+		uh.Logger.Print("Database exception: ", err)
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	if apartments == nil {
+		return
+	}
+	err = apartments.ToJson(rw)
+	if err != nil {
+		uh.Logger.Print("Unable to convert to json :", err)
+		rw.WriteHeader(http.StatusConflict)
+	}
+	rw.WriteHeader(http.StatusOK)
+}
+
+func (uh *UserHandler) FindAllReservationRequestsByApartments(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+	objID, _ := primitive.ObjectIDFromHex(id)
+	apartments, err := uh.Service.FindAllApartmentsByHostId(objID)
+
+	if err != nil {
+		uh.Logger.Print("Database exception: ", err)
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	if apartments == nil {
+		return
+	}
+
+	reservationRequests, err := uh.Service.FindAllReservationRequestsByApartments(apartments)
+
+	err = reservationRequests.ToJson(rw)
+	if err != nil {
+		uh.Logger.Print("Unable to convert to json :", err)
+		rw.WriteHeader(http.StatusConflict)
+	}
+	rw.WriteHeader(http.StatusOK)
+}

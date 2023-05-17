@@ -68,6 +68,12 @@ func main() {
 	putRouter.HandleFunc("/update/{id}", userHandler.Update)
 	putRouter.Use(userHandler.MiddlewareUserDeserialization)
 
+	apartmentsRouter := router.Methods(http.MethodGet).Subrouter()
+	apartmentsRouter.HandleFunc("/apartments/getApartments/{id}", userHandler.FindAllApartmentsByHostId)
+
+	reservationRequestsRouter := router.Methods(http.MethodGet).Subrouter()
+	reservationRequestsRouter.HandleFunc("/reservationRequests/requests/getRequests/{id}", userHandler.FindAllReservationRequestsByApartments)
+
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
 	server := http.Server{

@@ -69,10 +69,22 @@ func (ur *UserRepository) GetCollection() *mongo.Collection {
 	return usersCollection
 }
 
+func (ur *UserRepository) GetCollectionApartments() *mongo.Collection {
+	bookingDatabase := ur.Cli.Database("booking")
+	apartmentsCollection := bookingDatabase.Collection("apartments")
+	return apartmentsCollection
+}
+
 func (ur *UserRepository) GetCollectionReservations() *mongo.Collection {
 	bookingDatabase := ur.Cli.Database("booking")
 	reservationsCollection := bookingDatabase.Collection("reservations")
 	return reservationsCollection
+}
+
+func (ur *UserRepository) GetCollectionReservationsRequests() *mongo.Collection {
+	bookingDatabase := ur.Cli.Database("booking")
+	reservationsRequestsCollection := bookingDatabase.Collection("reservations_requests")
+	return reservationsRequestsCollection
 }
 
 func (ur *UserRepository) GetOne(id string) (*model.User, error) {
@@ -248,4 +260,51 @@ func (ur *UserRepository) InsertReservation(reservation *model.Reservation) (*mo
 	}
 	ur.Logger.Printf("Documents ID: %v\n", result.InsertedID)
 	return reservation, nil
+}
+
+func (ur *UserRepository) FindAllApartmentsByHostId(hostId primitive.ObjectID) (model.Apartments, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	apartmentsCollection := ur.GetCollectionApartments()
+
+	filter := bson.D{{Key: "hostId", Value: hostId}}
+
+	var apartments model.Apartments
+	flightsCursor, err := apartmentsCollection.Find(ctx, filter)
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+	if err = flightsCursor.All(ctx, &apartments); err != nil {
+		ur.Logger.Println(err)
+		ur.Logger.Println("*************************************************")
+		return nil, err
+	}
+	return apartments, nil
+}
+
+// TODO mislim da je u for petlji problem jer ne uspe da doda zahtev, nadjeni apartmani po host id su dobri
+func (ur *UserRepository) FindAllReservationRequestsByApartments(apartments model.Apartments) (model.ReservationRequests, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	reservationRequestsCollection := ur.GetCollectionReservationsRequests()
+
+	var reservationRequests model.ReservationRequests
+
+	for i := 0; i < len(apartments); i++ {
+		fmt.Println("apartmentId: " + apartments[i].ID.String())
+		reservations, err := reservationRequestsCollection.Find(ctx, bson.M{"apartmentId": apartments[i].ID})
+		if err != nil {
+			ur.Logger.Println(err)
+			return nil, err
+		}
+		reservations.All(ctx, &reservationRequests)
+		fmt.Println("DUZINAAAAAAAAAAAAAAAAAAAAA")
+		fmt.Println(len(reservationRequests))
+
+		reservations.Decode(reservationRequests)
+	}
+
+	return reservationRequests, nil
 }

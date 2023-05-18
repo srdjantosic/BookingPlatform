@@ -98,3 +98,16 @@ func (u *UserHandler) Update(rw http.ResponseWriter, h *http.Request) {
 	}
 	rw.WriteHeader(http.StatusOK)
 }
+
+func (u *UserHandler) Delete(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+	role := vars["role"]
+
+	err := u.Service.Delete(id, role)
+	if err != nil {
+		u.Logger.Println(err)
+		rw.WriteHeader(http.StatusBadRequest)
+	}
+	rw.WriteHeader(http.StatusOK)
+}

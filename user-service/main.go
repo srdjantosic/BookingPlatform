@@ -58,6 +58,9 @@ func main() {
 	putRouter.HandleFunc("/update/{id}", userHandler.Update)
 	putRouter.Use(userHandler.MiddlewareUserDeserialization)
 
+	deleteRouter := router.Methods(http.MethodDelete).Subrouter()
+	deleteRouter.HandleFunc("/delete/{id}/{role}", userHandler.Delete)
+
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
 	server := http.Server{

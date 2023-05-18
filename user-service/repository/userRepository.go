@@ -170,3 +170,20 @@ func (ur *UserRepository) Delete(id string) error {
 	ur.Logger.Printf("Documents deleted: %v\n", result.DeletedCount)
 	return nil
 }
+
+func (ur *UserRepository) DeleteHostsApartments(id primitive.ObjectID) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	bookingDatabase := ur.Cli.Database("booking")
+	apartmentCollection := bookingDatabase.Collection("apartments")
+
+	filter := bson.D{{Key: "_id", Value: id}}
+	result, err := apartmentCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		ur.Logger.Println(err)
+		return err
+	}
+	ur.Logger.Printf("Documents deleted: %v\n", result.DeletedCount)
+	return nil
+}

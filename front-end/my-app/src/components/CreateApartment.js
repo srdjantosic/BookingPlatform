@@ -40,7 +40,7 @@ export default function CreateApartment() {
             <a  href="/HostHomepage">Home Page</a>
             <a  href="/HostApartments">View my apartments</a>
             <a className='active' href="/CreateApartment">Add new apartment</a>
-            <a href="/HostReservations">Reservations</a>
+            <a href="/HostReservations">Reservation requests</a>
             <a href="/HostUpdate">Profile</a>
         </div>
         <div className="wrapper">

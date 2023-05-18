@@ -61,7 +61,7 @@ const search = (e) =>{
             <div class="topnav">
                 <a class="active" href="/Homepage">Home Page</a>
                 <a  href="/UserReservations">Reservations</a>
-                <a >Contracts</a>
+               
                 <a href="/UserUpdate">Profile</a>
              
             </div>
@@ -106,13 +106,7 @@ const search = (e) =>{
                                 <td>{val.minGuestsNumber}</td>
                                 <td>{val.maxGuestsNumber}</td>
                                 
-                                <td>
-                                    <button onClick={(e) => {
-                                        e.preventDefault()
-                                        localStorage.setItem('Id', val.id)
-                                        }}>View
-                                    </button>
-                                </td>
+                                
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
@@ -146,12 +140,7 @@ const search = (e) =>{
                                 <td>{val.Apartment.maxGuestsNumber}</td>
                                 <td>{val.TotalPrice}</td>
                                 <td>{val.UnitPrice}</td>
-                                <td>
-                                    <button onClick={(e) => {
-                                        e.preventDefault()
-                                        window.location.href = "/SeeApartment"                                    }}>View
-                                    </button>
-                                </td>
+                               
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()

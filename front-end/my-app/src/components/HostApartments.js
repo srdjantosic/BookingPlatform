@@ -23,7 +23,7 @@ function HostApartments(){
             <a  href="/HostHomepage">Home Page</a>
             <a className="active" href="/HostApartments">View my apartments</a>
             <a  href="/CreateApartment">Add new apartment</a>
-            <a href="/HostReservations">Reservations Requests</a>
+            <a href="/HostReservations">Reservation requests</a>
             <a href="/HostUpdate">Profile</a>
         </div>
         <div className='wrapper'>

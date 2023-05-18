@@ -61,7 +61,7 @@ const deleteReservation = (e) =>{
             <div class="topnav">
                 <a class="active" href="/Homepage">Home Page</a>
                 <a  href="/UserReservations">Reservations</a>
-                <a >Contracts</a>
+                
                 <a href="/UserUpdate">Profile</a>
              
             </div>

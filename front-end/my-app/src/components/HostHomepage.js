@@ -54,7 +54,7 @@ const move = (e) =>{
                 <a class="active" href="/HostHomepage">Home Page</a>
                 <a href="/HostApartments">View my apartments</a>
                 <a  href="/CreateApartment">Add new apartment</a>
-                <a href="/HostReservations">Reservations</a>
+                <a href="/HostReservations">Reservation requests</a>
                 <a href="/HostUpdate">Profile</a>
             </div>
             <div class="wrapper">

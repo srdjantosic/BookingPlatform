@@ -53,7 +53,7 @@ export default function UserUpdate() {
         <div class="topnav">
                 <a href="/Homepage">Home Page</a>
                 <a  href="/UserReservations">Reservations</a>
-                <a >Contracts</a>
+                
                 <a class="active" href="/UserUpdate">Profile</a>
         </div>
         <div className="wrapper">

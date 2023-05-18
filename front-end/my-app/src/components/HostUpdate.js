@@ -55,8 +55,9 @@ export default function HostUpdate() {
       <body>
         <div class="topnav">
                 <a href="/HostHomepage">Home Page</a>
+                <a  href="/HostApartments">View my apartments</a>
                 <a  href="/CreateApartment">Add new apartment</a>
-                <a href="/HostReservations">Reservations</a>
+                <a href="/HostReservations">Reservation requests</a>
                 <a class="active" href="/HostUpdate">Profile</a>
              
             </div>

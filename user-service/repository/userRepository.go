@@ -216,7 +216,7 @@ func (ur *UserRepository) DeleteReservation(id string) error {
 
 	var reservation model.Reservation
 	objID, _ := primitive.ObjectIDFromHex(id)
-	err := reservationsCollection.FindOne(ctx, bson.M{"_id": objID}).Decode(&reservation)
+	err := reservationsCollection.FindOne(ctx, bson.M{"id": objID}).Decode(&reservation)
 	if err != nil {
 		ur.Logger.Println(err)
 		return err
@@ -229,7 +229,7 @@ func (ur *UserRepository) DeleteReservation(id string) error {
 		return nil
 	}
 
-	filter := bson.D{{Key: "_id", Value: objID}}
+	filter := bson.D{{Key: "id", Value: objID}}
 	result, err := reservationsCollection.DeleteOne(ctx, filter)
 
 	if err != nil {

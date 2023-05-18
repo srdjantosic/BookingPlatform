@@ -30,6 +30,23 @@ export default function UserUpdate() {
         });
       }
 
+
+    const handleDelete = (e) =>{
+        e.preventDefault()
+
+        var userId=localStorage.getItem('userId');
+        var role=localStorage.getItem('role')
+
+
+        fetch("http://localhost:8080/api/user/delete/"+ userId + "/" + role,{
+            method:"DELETE",
+        }).then(() =>{
+            alert("Successful delete!")
+        }).catch((err) => {
+            console.log(err)
+        });
+    }
+
     return(
       <body>
         <div class="topnav">
@@ -79,7 +96,7 @@ export default function UserUpdate() {
                 </fieldset>
             
                 <button type="submit" onClick={handleClick}>Update</button>
-            <button type="submit">Delete account</button>
+            <button type="submit" onClick={handleDelete}>Delete account</button>
             </form>
         </div>
       </body>

@@ -39,17 +39,14 @@ const UserReservations = () => {
 
 
 const deleteReservation = (e) =>{
+   
     var Id = localStorage.getItem('Id');
       
       fetch("http://localhost:8080/api/user/deleteReservation/"+Id,{
           method:"DELETE",
-          headers : { 
-            'Content-Type': 'application/json'
-            
-           },
-      
+
         }).then(() =>{
-         window.location.href = "/UserReservations"
+       //  window.location.href = "/UserReservations"
         })
      
   }
@@ -88,14 +85,13 @@ const deleteReservation = (e) =>{
                                 <td>{val.guestsNumber}</td>
                                 
                                 <td>
-                                    <button onClick={(e) => {
+                                
+                                <button onClick={(e) => {
                                         e.preventDefault()
-
                                         localStorage.setItem('Id', val.id)
-
-                                       deleteReservation();
-                                        
-                                    }}>Delete</button>
+                                        deleteReservation();
+                                        }}>Delete
+                                    </button>
                                 </td>
                                 
                                 

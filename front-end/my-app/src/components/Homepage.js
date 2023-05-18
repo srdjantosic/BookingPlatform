@@ -12,6 +12,7 @@ const Homepage = () => {
   const[availabilityEndDate, setAvailabilityEndDate] = useState('');
   const[number, setNumber] = useState('');
 
+  const[availableApartments, setAvailableApartments] = useState([]);
 
 
 
@@ -65,36 +66,36 @@ const search = (e) =>{
              
             </div>
            
-            <div class="searcing">
-            <label>
-                    <p> Location</p>
-                    <input id="location" name="location" onChange={(e)=>setLocation(e.target.value)}/>
-                </label>
-                <label>
-                    <p> Number of persons</p>
-                    <input id="number" name="number" onChange={(e)=>setNumber(e.target.value)}/>
-                </label>
-                <label>
-                    <p> Start date</p>
-                    <input id="availabilityStartDate" name="availabilityStartDate" onChange={(e)=>setAvailabilityStartDate(e.target.value)}/>
-                </label>
-                <label>
-                    <p> End date</p>
-                    <input id="availabilityEndDate" name="availabilityEndDate" onChange={(e)=>setAvailabilityEndDate(e.target.value)}/>
-                </label>
-                <button onClick={search}> Search</button>
+            
+            <div className='wrapper'>
+            <table>
+                    <tr>
+                        <th>Location</th>
+                        <th>Number of persons</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td><input id="location" name="location" onChange={(e)=>setLocation(e.target.value)}/></td>
+                        <td><input id="number" name="number" onChange={(e)=>setNumber(e.target.value)}/></td>
+                        <td><input id="availabilityStartDate" name="availabilityStartDate" onChange={(e)=>setAvailabilityStartDate(e.target.value)}/></td>
+                        <td><input id="availabilityEndDate" name="availabilityEndDate" onChange={(e)=>setAvailabilityEndDate(e.target.value)}/></td>
+                        <td><button onClick={search}> Search</button></td>
+                    </tr>
+                </table>
+               
             </div>
             <div className='wrapper'>
-                <table>
+                <table id="toHide">
                     <tr>
                         <th>Name</th>
                         <th>Location</th>
                         <th>Benefits</th>
                         <th>Minimum number of guests</th>
                         <th>Maximum number of guests</th>
-                        <th>Final price</th>
-                        <th>Price per person</th>
                         
+                        <th></th>
                     </tr>
                     {apartments.map((val, key) => {
                         return(
@@ -104,29 +105,59 @@ const search = (e) =>{
                                 <td>{val.benefits}</td>
                                 <td>{val.minGuestsNumber}</td>
                                 <td>{val.maxGuestsNumber}</td>
-                                <td>{val.minGuestsNumber}</td>
-                                <td>{val.maxGuestsNumber}</td>
+                                
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
-
                                         localStorage.setItem('Id', val.id)
-
-                                        //navigate(`/SeeApartmet/`+val.id);
-                                        
-                                    }}>View</button>
+                                        }}>View
+                                    </button>
                                 </td>
                                 <td>
                                     <button onClick={(e) => {
-                                        
-
+                                        e.preventDefault()
                                         localStorage.setItem('Id', val.id)
-
-                                       navigate(`/ReserveApartment`);
-                                        
-                                    }}>Reserve</button>
+                                        }}>Reserve
+                                    </button>
                                 </td>
-                                
+                            </tr>
+                        )
+                    })}
+                </table>
+                <table id="toShow" hidden='true'>
+                    <tr>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Benefits</th>
+                        <th>Minimum number of guests</th>
+                        <th>Maximum number of guests</th>
+                        <th>Total Price</th>
+                        <th>Unit Price</th>
+                        <th></th>
+                    </tr>
+                    {availableApartments.map((val, key) => {
+                        return(
+                            <tr key={key} >
+                                <td>{val.Apartment.name}</td>
+                                <td>{val.Apartment.location}</td>
+                                <td>{val.Apartment.benefits}</td>
+                                <td>{val.Apartment.minGuestsNumber}</td>
+                                <td>{val.Apartment.maxGuestsNumber}</td>
+                                <td>{val.TotalPrice}</td>
+                                <td>{val.UnitPrice}</td>
+                                <td>
+                                    <button onClick={(e) => {
+                                        e.preventDefault()
+                                        window.location.href = "/SeeApartment"                                    }}>View
+                                    </button>
+                                </td>
+                                <td>
+                                    <button onClick={(e) => {
+                                        e.preventDefault()
+                                        localStorage.setItem('Id', val.id)
+                                        }}>Reserve
+                                    </button>
+                                </td>
                             </tr>
                         )
                     })}

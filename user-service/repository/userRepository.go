@@ -95,7 +95,7 @@ func (ur *UserRepository) GetOne(id string) (*model.User, error) {
 
 	var user model.User
 	objId, _ := primitive.ObjectIDFromHex(id)
-	err := usersCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&user)
+	err := usersCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&user)
 	if err != nil {
 		ur.Logger.Println(err)
 		return nil, err

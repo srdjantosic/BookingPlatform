@@ -139,3 +139,27 @@ func (a *ApartmentHandler) FilterApartments(rw http.ResponseWriter, h *http.Requ
 
 	apartments.ToJSON(rw)
 }
+
+func (a *ApartmentHandler) GetAllByHost(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+
+	apartments, _ := a.Service.GetAllByHost(id)
+
+	if apartments == nil {
+		rw.WriteHeader(http.StatusNotFound)
+	}
+	apartments.ToJson(rw)
+}
+
+func (a *ApartmentHandler) GetOne(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	id := vars["id"]
+
+	apartment, err := a.Service.GetOne(id)
+	if err != nil {
+		rw.WriteHeader(http.StatusNotFound)
+	}
+	apartment.ToJSON(rw)
+	rw.WriteHeader(http.StatusOK)
+}

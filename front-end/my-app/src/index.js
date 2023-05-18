@@ -16,6 +16,7 @@ import SeeApartment from './components/SeeApartment';
 import UserReservations from './components/UserReservations';
 import ReserveApartment from './components/ReserveApartment';
 import SearchedApartments from './components/SearchedApartments';
+import HostApartments from "./components/HostApartments";
 
 
 ReactDOM.render(
@@ -33,8 +34,7 @@ ReactDOM.render(
         <Route path='/SeeApartment' element = {<SeeApartment/>}/>
         <Route path='/UserReservations' element={<UserReservations/>}/>
         <Route path='/SearchedApartments' element={<SearchedApartments/>}/>
-
-        
+        <Route path='/HostApartments' element={<HostApartments/>}/>
     </Routes>
   </Router>,
  document.getElementById('root')

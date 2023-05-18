@@ -24,7 +24,8 @@ func (us *UserService) Insert(user *model.User) (*model.User, error) {
 	if err != nil {
 		return us.Repo.Insert(user)
 	}
-	return nil, err
+	us.Logger.Println("Username already exists!")
+	return nil, nil
 }
 
 func (us *UserService) FindByUsernameAndPassword(username string, password string) (*model.User, error) {
@@ -95,15 +96,36 @@ func (us *UserService) FindAllApartmentsByHostId(hostId primitive.ObjectID) (mod
 	return apartments, nil
 }
 
-func (us *UserService) FindAllReservationRequestsByApartments(apartments model.Apartments) (model.ReservationRequests, error) {
+func (us *UserService) FindAllReservationRequestsByApartments(hostId string) (model.ReservationRequestsForApartments, error) {
 
-	reservationRequests, err := us.Repo.FindAllReservationRequestsByApartments(apartments)
+	objId, _ := primitive.ObjectIDFromHex(hostId)
+	apartments, err := us.FindAllApartmentsByHostId(objId)
 	if err != nil {
-		us.Logger.Println(err)
+		us.Logger.Println("Something went wrong! Can not found your apartments!")
 		return nil, err
 	}
+	if len(apartments) == 0 {
+		us.Logger.Println("You don't have apartments!")
+		return nil, nil
+	}
 
-	return reservationRequests, nil
+	var allRequests model.ReservationRequestsForApartments
+	for i := 0; i < len(apartments); i++ {
+		apartmentReservationRequest, err := us.Repo.GetAllReservationRequestsByApartment(apartments[i].ID)
+		if err != nil {
+			us.Logger.Println("Something went wrong! Can not found your apartment reservation requests!")
+			return nil, err
+		}
+		if len(apartmentReservationRequest) != 0 {
+			allRequests = append(allRequests, apartmentReservationRequest)
+		}
+	}
+	if len(allRequests) == 0 {
+		us.Logger.Println("No apartment requests!")
+		return nil, nil
+	}
+	return allRequests, nil
+
 }
 
 func (us *UserService) InsertReservationRequest(reservation *model.ReservationRequset) (*model.ReservationRequset, error) {
@@ -135,5 +157,64 @@ func (us *UserService) AcceptRequest(id string) (*model.ReservationRequset, erro
 	return us.Repo.AcceptRequest(id)
 }
 func (us *UserService) Delete(id string, role string) error {
+	if role == "GUEST" {
+		usersReservations, err := us.Repo.GetAllReservationsByUser(id)
+		if err != nil {
+			us.Logger.Println("Something went wrong! Can not found your reservations!")
+			return err
+		}
+		if len(usersReservations) == 0 {
+			err = us.Repo.Delete(id)
+			if err != nil {
+				us.Logger.Println("Something went wrong! Can not delete your account!")
+				return err
+			}
+			us.Logger.Println("Delete success!")
+			return nil
+		}
+		return fmt.Errorf("You have active reservations!")
+	}
+	hostId, _ := primitive.ObjectIDFromHex(id)
+	apartments, err := us.Repo.FindAllApartmentsByHostId(hostId)
+	if err != nil {
+		us.Logger.Println("Something went wrong! Can not found your apartments!")
+		return err
+	}
+	if len(apartments) == 0 {
+		err = us.Repo.Delete(id)
+		if err != nil {
+			us.Logger.Println("Something went wrong! Can not delete your account!")
+			return err
+		}
+		us.Logger.Println("Delete success!")
+		return nil
+	}
+	//Provera da li za apartmane postoje rezervacije
+	for i := 0; i < len(apartments); i++ {
+		reservations, err := us.Repo.GetAllReservationsByApartment(apartments[i].ID)
+		if err != nil {
+			us.Logger.Println("Something went wrong! Can not found apartment reservations!")
+			return err
+		}
+		if len(reservations) != 0 {
+			return fmt.Errorf("You have active apartment reservations!")
+		}
+	}
+
+	//Brisanje apartmana
+	for i := 0; i < len(apartments); i++ {
+		err = us.Repo.DeleteHostsApartments(apartments[i].ID)
+		if err != nil {
+			us.Logger.Println(err)
+			return err
+		}
+	}
+	//Nakon brisanja svih apartmana, brise se host
+	err = us.Repo.Delete(id)
+	if err != nil {
+		us.Logger.Println("Something went wrong! Can not delete your account!")
+		return err
+	}
+	us.Logger.Println("Delete success!")
 	return nil
 }

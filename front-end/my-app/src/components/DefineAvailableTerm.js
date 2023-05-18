@@ -5,25 +5,30 @@ export default function DefineAvailableTerm() {
 
     const[availabilityStartDate, setAvailabilityStartDate] = useState('')
     const[availabilityEndDate, setAvailabilityEndDate] = useState('')
-    const[price, setPrice] = useState('')
-    const[unitPrice, setUnitPrice] = useState('')
-    var [productId, setProductId] = useState('');
+    const[priceString, setPrice] = useState('')
+    const[unitPriceString, setUnitPrice] = useState('')
+
+    var apartmentId=localStorage.getItem('apartmentId')
+    var role = localStorage.getItem('role')
 
     const handleClick = (e) =>{
         e.preventDefault()
-        var number = parseInt(price, 10 );
-        var number1 = parseInt(unitPrice, 10 );
-        const new_user = {availabilityStartDate, availabilityEndDate, number, number1}
+
+        var price = parseInt(priceString)
+        var unitPrice = parseInt(unitPriceString)
+
+        const new_user = {availabilityStartDate, availabilityEndDate, price, unitPrice}
+
         console.log(new_user)
-        fetch("http://localhost:8080/api/apartment/insertItem/"+productId+"/"+localStorage.getItem('role'),{ 
+        fetch("http://localhost:8080/api/apartment/insertItem/"+apartmentId+"/"+role,{
         method:"POST",
        // headers:{"Content-Type":"application/json"},
         body:JSON.stringify(new_user)
       }).then(() =>{
-        alert("Successful registration!")
-      
+            alert("Successful create!")
+            window.location.href='/SeeApartment'
       }).catch((err) => {
-        console.log(err)
+            console.log(err)
       });
       }
 
@@ -35,21 +40,12 @@ export default function DefineAvailableTerm() {
                <a href="/HostReservations">Reservations</a>
                 <a href="/HostUpdate">Profile</a>
              
-            </div>
+        </div>
+        <div className='wrapper'>
+            <h1>Add new item</h1>
+        </div>
         <div className="wrapper">
-        <form >
-          <h1>Define free term</h1>
-
-            <fieldset>
-            <label>
-    Choose apartment
-      <select  onClick={(e)=>setProductId(e.target.value)}>
-        <option value="64649928bd67705a903c9f03">Lux Apartmani</option>
-        <option value="6464a00161417e4661d07d07">Apartmani Zavicaj</option>
-      </select>
-    </label>
-            </fieldset>
-
+        <form>
           <fieldset>
                 <label>
                     <p> Start date </p>
@@ -74,14 +70,9 @@ export default function DefineAvailableTerm() {
                     <input id="unitPrice" name="unitPrice" onChange={(e)=>setUnitPrice(e.target.value)}/>
                 </label>
             </fieldset>
-           
-            
-            <button type="submit" onClick={handleClick}>submit</button>
-
+            <button type="submit" onClick={handleClick}>Create</button>
         </form>
       </div>
- 
-      
       </body>
     )
 }

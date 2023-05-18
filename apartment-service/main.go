@@ -61,6 +61,12 @@ func main() {
 	filterRouter := router.Methods(http.MethodGet).Subrouter()
 	filterRouter.HandleFunc("/filter/{location}/{num}/{start}/{end}", apartmentHandler.FilterApartments)
 
+	getByHostRouter := router.Methods(http.MethodGet).Subrouter()
+	getByHostRouter.HandleFunc("/getByHostId/{id}", apartmentHandler.GetAllByHost)
+
+	getOneApartmentRouter := router.Methods(http.MethodGet).Subrouter()
+	getOneApartmentRouter.HandleFunc("/getOne/{id}", apartmentHandler.GetOne)
+
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
 	server := http.Server{

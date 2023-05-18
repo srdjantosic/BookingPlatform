@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom'
 
 
 const UserReservations = () => {
-
-  const[reservations, setReservations] = useState('');
+  const [apartments, setApartments] = useState([]);
+  
+  const[location, setLocation] = useState('');
   const[availabilityStartDate, setAvailabilityStartDate] = useState('');
   const[availabilityEndDate, setAvailabilityEndDate] = useState('');
   const[number, setNumber] = useState('');
@@ -24,15 +25,35 @@ const UserReservations = () => {
     .then(res =>res.json())
     .then((result)=>
     {
-        setReservations(result);
+        setApartments(result);
     }
     )
   }, [])
 
-
+  const navigate = useNavigate();
   
+  const navigateToAddNew = (e) =>{
+    e.preventDefault()
+    window.location.href = "/CreateApartment"
+}
 
 
+const deleteReservation = (e) =>{
+    var Id = localStorage.getItem('Id');
+      
+      fetch("http://localhost:8080/api/user/deleteReservation/"+Id,{
+          method:"DELETE",
+          headers : { 
+            'Content-Type': 'application/json'
+            
+           },
+      
+        }).then(() =>{
+         window.location.href = "/UserReservations"
+        })
+     
+  }
+  
 
 
   return(
@@ -41,41 +62,40 @@ const UserReservations = () => {
     
         <body>
             <div class="topnav">
-                <a  href="/Homepage">Home Page</a>
-                <a class="active" href="/UserReservations">Reservations</a>
+                <a class="active" href="/Homepage">Home Page</a>
+                <a  href="/UserReservations">Reservations</a>
                 <a >Contracts</a>
                 <a href="/UserUpdate">Profile</a>
              
             </div>
            
-           
+            
             <div className='wrapper'>
                 <table>
                     <tr>
-                        
-                        <th>Apartment</th>
+                        <th>Apartment id</th>
                         <th>Start date</th>
-                        <th>End date </th>
+                        <th>End date</th>
                         <th>Number of guests</th>
-                        
+                      
                     </tr>
-                    {reservations.map((val, key) => {
+                    {apartments.map((val, key) => {
                         return(
                             <tr key={key} >
                                 <td>{val.apartmentId}</td>
                                 <td>{val.startDate}</td>
                                 <td>{val.endDate}</td>
                                 <td>{val.guestsNumber}</td>
-                            
+                                
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
 
                                         localStorage.setItem('Id', val.id)
 
-                                        //navigate(`/SeeApartmet/`+val.id);
+                                       deleteReservation();
                                         
-                                    }}>Cancel</button>
+                                    }}>Delete</button>
                                 </td>
                                 
                                 

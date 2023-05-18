@@ -53,24 +53,29 @@ function SeeApartment(){
                     <td>{apartment.minGuestsNumber}</td>
                     <td>{apartment.maxGuestsNumber}</td>
                     <td>
-                        {items.map((val, key)=>{
+
+
+                  {
+                      items.map((val, key)=>{
 
                             var priceUnit = val.unitPrice
                             var priceUnitString = "Price for apartment"
                             if (priceUnit == "0"){
-                                priceUnitString = "Price per person"
-                            }
+                            priceUnitString = "Price per person"
+                        }
 
                             return(
-                                <div>
-                                    <p><strong>Pricelist item:</strong></p>
-                                    <p>Start date: {val.availabilityStartDate}</p>
-                                    <p>End date: {val.availabilityEndDate}</p>
-                                    <p>Price: {val.price}</p>
-                                    <p>Price unit: {priceUnitString}</p>
-                                </div>
+                            <div>
+                            <p><strong>Pricelist item:</strong></p>
+                            <p>Start date: {val.availabilityStartDate}</p>
+                            <p>End date: {val.availabilityEndDate}</p>
+                            <p>Price: {val.price}</p>
+                            <p>Price unit: {priceUnitString}</p>
+                            </div>
                             )
+
                         })}
+
                     </td>
                 </tr>
             </table>

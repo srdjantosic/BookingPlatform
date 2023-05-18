@@ -15,6 +15,20 @@ const HostReservations = () => {
         })
     }, []);
 
+    const handleNo = (e) =>{
+
+        var req_id = localStorage.getItem('requestId')
+
+
+        fetch("http://localhost:8080/api/user/request/accept/reservationRequest/"+req_id,{
+            method:"DELETE",
+        }).then(() =>{
+            alert("Successful deletion!")
+        }).catch((err) => {
+            console.log(err)
+        });
+    }
+
   return(
         <body>
             <div class="topnav">
@@ -53,10 +67,39 @@ const HostReservations = () => {
                                                 <td>{val2.endDate}</td>
                                                 <td>{val2.guestsNumber}</td>
                                                 <td>
-                                                    <button>Yes</button>
+                                                    <button onClick={(e) => {
+                                                        e.preventDefault()
+                                                        localStorage.setItem('requestId', val2.id)
+                                                        // handleYes()
+                                                        var req_id = localStorage.getItem('requestId')
+                                                        console.log("BUTTON YES")
+
+                                                        fetch("http://localhost:8080/api/user/request/accept/reservationRequest/"+req_id,{
+                                                            method:"POST",
+                                                        }).then(() =>{
+                                                            alert("Request accepted!")
+                                                        }).catch((err) => {
+                                                            console.log(err)
+                                                        });
+                                                    }}
+                                                    >Yes</button>
                                                 </td>
                                                 <td>
-                                                    <button>No</button>
+                                                    <button  onClick={(e) => {
+                                                        e.preventDefault()
+                                                        localStorage.setItem('requestId', val2.id)
+                                                        // handleYes()
+                                                        var req_id = localStorage.getItem('requestId')
+
+
+                                                        fetch("http://localhost:8080/api/user/delete/request/"+req_id,{
+                                                            method:"DELETE",
+                                                        }).then(() =>{
+                                                            alert("Request rejected!")
+                                                        }).catch((err) => {
+                                                            console.log(err)
+                                                        });
+                                                    }}> No</button>
                                                 </td>
                                             </tr>
                                         )

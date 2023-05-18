@@ -7,7 +7,7 @@ import (
 )
 
 type ReservationRequset struct {
-	ID           primitive.ObjectID `bson:"id" json:"id"`
+	ID           primitive.ObjectID `bson:"_id" json:"id"`
 	UserID       primitive.ObjectID `bson:"userId" json:"userId"`
 	ApartmentID  primitive.ObjectID `bson:"apartmentId" json:"apartmentId"`
 	StartDate    string             `bson:"startDate" json:"startDate"`

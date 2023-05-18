@@ -94,7 +94,7 @@ func (u *UserHandler) Insert(rw http.ResponseWriter, h *http.Request) {
 
 	createdUser, err := u.Service.Insert(user)
 
-	if createdUser == nil {
+	if err == nil && createdUser == nil {
 		rw.WriteHeader(http.StatusBadRequest)
 	}
 	if err != nil {
@@ -211,24 +211,19 @@ func (uh *UserHandler) FindAllApartmentsByHostId(rw http.ResponseWriter, h *http
 func (uh *UserHandler) FindAllReservationRequestsByApartments(rw http.ResponseWriter, h *http.Request) {
 	vars := mux.Vars(h)
 	id := vars["id"]
-	objID, _ := primitive.ObjectIDFromHex(id)
-	apartments, err := uh.Service.FindAllApartmentsByHostId(objID)
+
+	reservationRequests, err := uh.Service.FindAllReservationRequestsByApartments(id)
 
 	if err != nil {
-		uh.Logger.Print("Database exception: ", err)
 		rw.WriteHeader(http.StatusBadRequest)
-	}
-	if apartments == nil {
 		return
 	}
 
-	reservationRequests, err := uh.Service.FindAllReservationRequestsByApartments(apartments)
-
-	err = reservationRequests.ToJson(rw)
-	if err != nil {
-		uh.Logger.Print("Unable to convert to json :", err)
-		rw.WriteHeader(http.StatusConflict)
+	if reservationRequests == nil {
+		rw.WriteHeader(http.StatusNotFound)
+		return
 	}
+	reservationRequests.ToJson(rw)
 	rw.WriteHeader(http.StatusOK)
 }
 

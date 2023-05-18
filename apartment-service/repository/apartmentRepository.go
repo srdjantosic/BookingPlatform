@@ -106,6 +106,22 @@ func (a *ApartmentRepository) GetAll() (model.Apartments, error) {
 	return apartments, nil
 }
 
+func (a *ApartmentRepository) GetOne(id string) (*model.Apartment, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	apartmentsCollection := a.GetCollection()
+	var apartment model.Apartment
+	objId, _ := primitive.ObjectIDFromHex(id)
+
+	err := apartmentsCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&apartment)
+	if err != nil {
+		a.Logger.Println(err)
+		return nil, err
+	}
+	return &apartment, nil
+}
+
 func (a *ApartmentRepository) InsertPricelistItem(item *model.PricelistItem, apartmentId string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

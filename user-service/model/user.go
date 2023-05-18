@@ -69,6 +69,12 @@ type ReservationRequset struct {
 }
 
 type ReservationRequests []*ReservationRequset
+type ReservationRequestsForApartments []ReservationRequests
+
+func (r *ReservationRequestsForApartments) ToJson(w io.Writer) error {
+	e := json.NewEncoder(w)
+	return e.Encode(r)
+}
 
 func (r *ReservationRequests) ToJson(w io.Writer) error {
 	e := json.NewEncoder(w)

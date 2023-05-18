@@ -52,10 +52,10 @@ const move = (e) =>{
         <body>
             <div class="topnav">
                 <a class="active" href="/HostHomepage">Home Page</a>
+                <a href="/HostApartments">View my apartments</a>
                 <a  href="/CreateApartment">Add new apartment</a>
                 <a href="/HostReservations">Reservations</a>
                 <a href="/HostUpdate">Profile</a>
-             
             </div>
             <div class="wrapper">
                 <table>
@@ -74,7 +74,6 @@ const move = (e) =>{
                         <td><button onClick={search}> Search</button></td>
                     </tr>
                 </table>
-                <button onClick={move}> Define new terms</button>
             </div>
             <div className='wrapper'>
                 <table id="toHide">
@@ -84,8 +83,6 @@ const move = (e) =>{
                         <th>Benefits</th>
                         <th>Minimum number of guests</th>
                         <th>Maximum number of guests</th>
-                        <th>Final price</th>
-                        <th>Price per person</th>
                         <th></th>
                     </tr>
                     {apartments.map((val, key) => {
@@ -94,8 +91,6 @@ const move = (e) =>{
                                 <td>{val.name}</td>
                                 <td>{val.location}</td>
                                 <td>{val.benefits}</td>
-                                <td>{val.minGuestsNumber}</td>
-                                <td>{val.maxGuestsNumber}</td>
                                 <td>{val.minGuestsNumber}</td>
                                 <td>{val.maxGuestsNumber}</td>
                                 <td>
@@ -133,7 +128,7 @@ const move = (e) =>{
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
-                                        window.location.href = "/SeeApartment"                                    }}>View
+                                        window.location.href = "/SeeApartment"}}>View
                                     </button>
                                 </td>
                             </tr>

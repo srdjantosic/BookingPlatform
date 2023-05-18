@@ -261,12 +261,36 @@ func (ur *UserRepository) DeleteRequest(id string) error {
 func (ur *UserRepository) GetAllReservationsByUser(guestId string) (model.Reservations, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	fmt.Println("USOOOOOOOOOOOOOOOOOOOOOO33333333333333333333")
+
 	reservationsCollection := ur.GetCollectionReservations()
 
 	objID, _ := primitive.ObjectIDFromHex(guestId)
 	fmt.Println("**************************", objID, " *************************************")
 	filter := bson.D{{Key: "guestId", Value: objID}}
+
+	var reservations model.Reservations
+	//flightsCursor, err := reservationsCollection.Find(ctx, bson.M{"guestId": objID})
+	flightsCursor, err := reservationsCollection.Find(ctx, filter)
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
+	}
+	if err = flightsCursor.All(ctx, &reservations); err != nil {
+		ur.Logger.Println(err)
+		ur.Logger.Println("*************************************************")
+		return nil, err
+	}
+	return reservations, nil
+}
+
+func (ur *UserRepository) GetAllReservationsByApartment(apartmentId primitive.ObjectID) (model.Reservations, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	reservationsCollection := ur.GetCollectionReservations()
+
+	fmt.Println("**************************", apartmentId, " *************************************")
+	filter := bson.D{{Key: "apartmentId", Value: apartmentId}}
 
 	var reservations model.Reservations
 	//flightsCursor, err := reservationsCollection.Find(ctx, bson.M{"guestId": objID})
@@ -318,30 +342,56 @@ func (ur *UserRepository) FindAllApartmentsByHostId(hostId primitive.ObjectID) (
 	return apartments, nil
 }
 
+/*
 // TODO mislim da je u for petlji problem jer ne uspe da doda zahtev, nadjeni apartmani po host id su dobri
-func (ur *UserRepository) FindAllReservationRequestsByApartments(apartments model.Apartments) (model.ReservationRequests, error) {
+
+	func (ur *UserRepository) FindAllReservationRequestsByApartments(apartments model.Apartments) (model.ReservationRequests, error) {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		reservationRequestsCollection := ur.GetCollectionReservationsRequests()
+
+		var reservationRequests model.ReservationRequests
+
+		for i := 0; i < len(apartments); i++ {
+			fmt.Println("apartmentId: " + apartments[i].ID.String())
+			reservations, err := reservationRequestsCollection.Find(ctx, bson.M{"apartmentId": apartments[i].ID})
+			if err != nil {
+				ur.Logger.Println(err)
+				return nil, err
+			}
+			reservations.All(ctx, &reservationRequests)
+			fmt.Println("DUZINAAAAAAAAAAAAAAAAAAAAA")
+			fmt.Println(len(reservationRequests))
+
+			reservations.Decode(reservationRequests)
+		}
+
+		return reservationRequests, nil
+	}
+*/
+func (ur *UserRepository) GetAllReservationRequestsByApartment(apartmentId primitive.ObjectID) (model.ReservationRequests, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	reservationRequestsCollection := ur.GetCollectionReservationsRequests()
 
-	var reservationRequests model.ReservationRequests
+	fmt.Println("**************************", apartmentId, " *************************************")
+	filter := bson.D{{Key: "apartmentId", Value: apartmentId}}
 
-	for i := 0; i < len(apartments); i++ {
-		fmt.Println("apartmentId: " + apartments[i].ID.String())
-		reservations, err := reservationRequestsCollection.Find(ctx, bson.M{"apartmentId": apartments[i].ID})
-		if err != nil {
-			ur.Logger.Println(err)
-			return nil, err
-		}
-		reservations.All(ctx, &reservationRequests)
-		fmt.Println("DUZINAAAAAAAAAAAAAAAAAAAAA")
-		fmt.Println(len(reservationRequests))
-
-		reservations.Decode(reservationRequests)
+	var reservations model.ReservationRequests
+	//flightsCursor, err := reservationsCollection.Find(ctx, bson.M{"guestId": objID})
+	flightsCursor, err := reservationRequestsCollection.Find(ctx, filter)
+	if err != nil {
+		ur.Logger.Println(err)
+		return nil, err
 	}
-
-	return reservationRequests, nil
+	if err = flightsCursor.All(ctx, &reservations); err != nil {
+		ur.Logger.Println(err)
+		ur.Logger.Println("*************************************************")
+		return nil, err
+	}
+	return reservations, nil
 }
 
 func (ur *UserRepository) InsertReservationRequest(reservationRequest *model.ReservationRequset) (*model.ReservationRequset, error) {

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import './styles/Login.css';
 
 export default function CreateApartment() {
@@ -36,11 +36,11 @@ export default function CreateApartment() {
     return(
       <body>
         <div class="topnav">
-                <a href="/HostHomepage">Home Page</a>
-                <a class="active" href="/CreateApartment">Add new apartment</a>
-                <a href="/HostReservations">Reservations</a>
-                <a href="/HostUpdate">Profile</a>
-             
+            <a  href="/HostHomepage">Home Page</a>
+            <a  href="/HostApartments">View my apartments</a>
+            <a className='active' href="/CreateApartment">Add new apartment</a>
+            <a href="/HostReservations">Reservations</a>
+            <a href="/HostUpdate">Profile</a>
         </div>
         <div className="wrapper">
         <form >

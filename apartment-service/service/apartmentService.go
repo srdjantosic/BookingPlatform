@@ -94,3 +94,24 @@ func (as *ApartmentService) FilterApartments(location string, guestsNumber int, 
 	}
 	return availableApartments, nil
 }
+
+func (a *ApartmentService) GetAllByHost(hostId string) (model.Apartments, error) {
+	apartments, _ := a.GetAll()
+
+	objId, _ := primitive.ObjectIDFromHex(hostId)
+	var myApartments model.Apartments
+	for i := 0; i < len(apartments); i++ {
+		if apartments[i].HostId == objId {
+			myApartments = append(myApartments, apartments[i])
+		}
+	}
+	if len(myApartments) == 0 {
+		a.Logger.Println("No apartments!")
+		return nil, nil
+	}
+	return myApartments, nil
+}
+
+func (a *ApartmentService) GetOne(id string) (*model.Apartment, error) {
+	return a.Repo.GetOne(id)
+}

@@ -91,12 +91,12 @@ const move = (e) =>{
                                 <td>{val.name}</td>
                                 <td>{val.location}</td>
                                 <td>{val.benefits}</td>
-                                
+                                <td>{val.minGuestsNumber}</td>
+                                <td>{val.maxGuestsNumber}</td>
                                 <td>
-                                    <button onClick={(e) => {
+                                <button onClick={(e) => {
                                         e.preventDefault()
-                                        localStorage.setItem('Id', val.id)
-                                        }}>View
+                                        window.location.href = "/SeeApartment"}}>View
                                     </button>
                                     
                                 </td>
@@ -128,6 +128,7 @@ const move = (e) =>{
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
+                                       // localStorage.setItem('apartmentId',val.id);
                                         window.location.href = "/SeeApartment"}}>View
                                     </button>
                                 </td>

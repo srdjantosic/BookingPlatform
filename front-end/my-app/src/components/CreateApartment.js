@@ -27,6 +27,7 @@ export default function CreateApartment() {
         body:JSON.stringify(new_apartment)
       }).then(() =>{
         alert("Successful created!")
+        window.location.href = "/HostHomepage";
         console.log(new_apartment)
       }).catch((err) => {
         console.log(err)

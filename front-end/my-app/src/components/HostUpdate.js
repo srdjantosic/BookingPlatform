@@ -42,8 +42,10 @@ export default function HostUpdate() {
             method:"DELETE",
         }).then(() =>{
             alert("Successful delete!")
+            window.location.href = "/UserLogin";
         }).catch((err) => {
             console.log(err)
+
         });
     }
 

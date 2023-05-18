@@ -40,13 +40,13 @@ const UserReservations = () => {
 
 const deleteReservation = (e) =>{
    
-    var Id = localStorage.getItem('Id');
+    var Id = localStorage.getItem('resId');
       
       fetch("http://localhost:8080/api/user/deleteReservation/"+Id,{
           method:"DELETE",
 
         }).then(() =>{
-       //  window.location.href = "/UserReservations"
+        window.location.href = "/UserReservations"
         })
      
   }
@@ -88,9 +88,9 @@ const deleteReservation = (e) =>{
                                 
                                 <button onClick={(e) => {
                                         e.preventDefault()
-                                        localStorage.setItem('Id', val.id)
+                                        localStorage.setItem('resId', val.id)
                                         deleteReservation();
-                                        }}>Delete
+                                        }}>Cancel
                                     </button>
                                 </td>
                                 

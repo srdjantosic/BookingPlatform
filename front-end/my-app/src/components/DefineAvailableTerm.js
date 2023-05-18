@@ -64,10 +64,10 @@ export default function DefineAvailableTerm() {
                 </label>
             </fieldset>
             <fieldset>
-                <label>
-                    <p>Unit price</p>
-                    <input id="unitPrice" name="unitPrice" onChange={(e)=>setUnitPrice(e.target.value)}/>
-                </label>
+            <select  onClick={(e)=>setUnitPrice(e.target.value)}>
+        <option value="0">Price per person</option>
+        <option value="1">Price per apartment </option>
+        </select>
             </fieldset>
             <button type="submit" onClick={handleClick}>Create</button>
         </form>

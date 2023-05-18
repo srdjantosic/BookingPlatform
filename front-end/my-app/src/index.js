@@ -35,6 +35,8 @@ ReactDOM.render(
         <Route path='/UserReservations' element={<UserReservations/>}/>
         <Route path='/SearchedApartments' element={<SearchedApartments/>}/>
         <Route path='/HostApartments' element={<HostApartments/>}/>
+        <Route path='/ReserveApartment' element={<ReserveApartment/>}/>
+        
     </Routes>
   </Router>,
  document.getElementById('root')

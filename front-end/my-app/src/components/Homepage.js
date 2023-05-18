@@ -34,9 +34,9 @@ const Homepage = () => {
 
   const navigate = useNavigate();
   
-  const navigateToAddNew = (e) =>{
-    e.preventDefault()
-    window.location.href = "/CreateApartment"
+  const navigateToUpdate = (event) => {
+    navigate(`/ReserveApartment`);
+
 }
 
 const search = (e) =>{
@@ -117,6 +117,7 @@ const search = (e) =>{
                                     <button onClick={(e) => {
                                         e.preventDefault()
                                         localStorage.setItem('Id', val.id)
+                                        navigateToUpdate();
                                         }}>Reserve
                                     </button>
                                 </td>
@@ -155,6 +156,7 @@ const search = (e) =>{
                                     <button onClick={(e) => {
                                         e.preventDefault()
                                         localStorage.setItem('Id', val.id)
+                                        navigateToUpdate();
                                         }}>Reserve
                                     </button>
                                 </td>

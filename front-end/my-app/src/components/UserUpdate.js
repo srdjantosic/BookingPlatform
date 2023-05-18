@@ -42,6 +42,7 @@ export default function UserUpdate() {
             method:"DELETE",
         }).then(() =>{
             alert("Successful delete!")
+            window.location.href = "/UserLogin";
         }).catch((err) => {
             console.log(err)
         });

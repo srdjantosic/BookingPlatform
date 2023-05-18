@@ -94,7 +94,7 @@ func (u *UserHandler) Insert(rw http.ResponseWriter, h *http.Request) {
 
 	createdUser, err := u.Service.Insert(user)
 
-	if createdUser == nil {
+	if err == nil && createdUser == nil {
 		rw.WriteHeader(http.StatusBadRequest)
 	}
 	if err != nil {

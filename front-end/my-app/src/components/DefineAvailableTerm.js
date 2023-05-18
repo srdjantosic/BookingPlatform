@@ -22,7 +22,6 @@ export default function DefineAvailableTerm() {
         console.log(new_user)
         fetch("http://localhost:8080/api/apartment/insertItem/"+apartmentId+"/"+role,{
         method:"POST",
-       // headers:{"Content-Type":"application/json"},
         body:JSON.stringify(new_user)
       }).then(() =>{
             alert("Successful create!")

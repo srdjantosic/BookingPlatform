@@ -134,3 +134,6 @@ func (us *UserService) AcceptRequest(id string) (*model.ReservationRequset, erro
 
 	return us.Repo.AcceptRequest(id)
 }
+func (us *UserService) Delete(id string, role string) error {
+	return nil
+}

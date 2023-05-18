@@ -85,6 +85,9 @@ func main() {
 	reservationRequestsRouter := router.Methods(http.MethodGet).Subrouter()
 	reservationRequestsRouter.HandleFunc("/reservationRequests/requests/getRequests/{id}", userHandler.FindAllReservationRequestsByApartments)
 
+	deleteRouter := router.Methods(http.MethodDelete).Subrouter()
+	deleteRouter.HandleFunc("/delete/{id}/{role}", userHandler.Delete)
+
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
 	server := http.Server{

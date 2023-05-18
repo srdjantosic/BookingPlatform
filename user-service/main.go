@@ -88,8 +88,10 @@ func main() {
 	deleteRouter := router.Methods(http.MethodDelete).Subrouter()
 	deleteRouter.HandleFunc("/delete/{id}/{role}", userHandler.Delete)
 
-	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
+	//cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
+	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedMethods([]string{http.MethodDelete, http.MethodDelete, http.MethodPost, http.MethodPut}),
+		gorillaHandlers.AllowedOrigins([]string{"*"}))
 	server := http.Server{
 		Addr:         ":" + port,
 		Handler:      cors(router),

@@ -84,8 +84,7 @@ const move = (e) =>{
                         <th>Benefits</th>
                         <th>Minimum number of guests</th>
                         <th>Maximum number of guests</th>
-                        <th>Final price</th>
-                        <th>Price per person</th>
+                        
                         <th></th>
                     </tr>
                     {apartments.map((val, key) => {
@@ -96,14 +95,14 @@ const move = (e) =>{
                                 <td>{val.benefits}</td>
                                 <td>{val.minGuestsNumber}</td>
                                 <td>{val.maxGuestsNumber}</td>
-                                <td>{val.minGuestsNumber}</td>
-                                <td>{val.maxGuestsNumber}</td>
+                                
                                 <td>
                                     <button onClick={(e) => {
                                         e.preventDefault()
                                         localStorage.setItem('Id', val.id)
                                         }}>View
                                     </button>
+                                    
                                 </td>
                             </tr>
                         )
